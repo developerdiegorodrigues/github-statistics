@@ -1,0 +1,130 @@
+name: Update GitHub Stats SVGs
+
+on:
+  schedule:
+    # Executa diariamente às 06:00 UTC (03:00 BRT)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Permite execução manual
+
+env:
+  GITHUB_USERNAME: developerdiegorodrigues
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create backup of current SVGs
+        run: |
+          mkdir -p backup
+          cp -f *.svg backup/ 2>/dev/null || true
+
+      - name: Fetch GitHub Readme Streak Stats
+        id: streak
+        continue-on-error: true
+        run: |
+          echo "Fetching streak stats..."
+          curl -sSf --max-time 30 \
+            "https://github-readme-streak-stats.herokuapp.com/?user=${{ env.GITHUB_USERNAME }}&theme=dark&hide_border=false&stroke=E4E2E2&ring=FB8C00&fire=FB8C00&currStreakLabel=FB8C00&background=151515&border=E4E2E2" \
+            -o github-readme-streak-stats.svg.tmp
+          
+          # Valida se o SVG é válido (contém a tag svg)
+          if grep -q '<svg' github-readme-streak-stats.svg.tmp; then
+            mv github-readme-streak-stats.svg.tmp github-readme-streak-stats.svg
+            echo "success=true" >> $GITHUB_OUTPUT
+            echo "✅ Streak stats atualizado com sucesso"
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+            echo "⚠️ SVG inválido recebido, mantendo versão anterior"
+            rm -f github-readme-streak-stats.svg.tmp
+          fi
+
+      - name: Fetch Most Used Languages
+        id: languages
+        continue-on-error: true
+        run: |
+          echo "Fetching most used languages..."
+          curl -sSf --max-time 30 \
+            "https://github-readme-stats.vercel.app/api/top-langs/?username=${{ env.GITHUB_USERNAME }}&theme=dark&hide_border=false&include_all_commits=true&count_private=true&layout=compact&bg_color=151515&title_color=fff&text_color=9f9f9f&border_color=e4e2e2" \
+            -o MostUsedLanguages.svg.tmp
+          
+          if grep -q '<svg' MostUsedLanguages.svg.tmp; then
+            mv MostUsedLanguages.svg.tmp MostUsedLanguages.svg
+            echo "success=true" >> $GITHUB_OUTPUT
+            echo "✅ Most Used Languages atualizado com sucesso"
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+            echo "⚠️ SVG inválido recebido, mantendo versão anterior"
+            rm -f MostUsedLanguages.svg.tmp
+          fi
+
+      - name: Fetch Contributor Stats
+        id: contributor
+        continue-on-error: true
+        run: |
+          echo "Fetching contributor stats..."
+          curl -sSf --max-time 30 \
+            "https://github-contributor-stats.vercel.app/api?username=${{ env.GITHUB_USERNAME }}&limit=5&theme=dark&combine_all_yearly_contributions=true&hide_border=false&bg_color=151515&title_color=fff&text_color=9f9f9f&border_color=e4e2e2" \
+            -o contributor-stats.svg.tmp
+          
+          if grep -q '<svg' contributor-stats.svg.tmp; then
+            mv contributor-stats.svg.tmp contributor-stats.svg
+            echo "success=true" >> $GITHUB_OUTPUT
+            echo "✅ Contributor stats atualizado com sucesso"
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+            echo "⚠️ SVG inválido recebido, mantendo versão anterior"
+            rm -f contributor-stats.svg.tmp
+          fi
+
+      - name: Restore from backup if all fetches failed
+        run: |
+          # Se todos os fetches falharam, restaura backup
+          if [[ "${{ steps.streak.outputs.success }}" != "true" ]] && \
+             [[ "${{ steps.languages.outputs.success }}" != "true" ]] && \
+             [[ "${{ steps.contributor.outputs.success }}" != "true" ]]; then
+            echo "⚠️ Todas as APIs falharam, restaurando backup..."
+            cp -f backup/*.svg . 2>/dev/null || true
+          fi
+          rm -rf backup
+
+      - name: Update last updated timestamp
+        run: |
+          echo "Última atualização: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > LAST_UPDATED.txt
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "📝 Nenhuma alteração detectada"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📝 Alterações detectadas, preparando commit..."
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "🔄 Atualização automática dos stats - $(date -u '+%Y-%m-%d')"
+          git push
+
+      - name: Summary
+        run: |
+          echo "## 📊 Resumo da Atualização" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Stat | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Streak Stats | ${{ steps.streak.outputs.success == 'true' && '✅ Sucesso' || '⚠️ Fallback' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Most Used Languages | ${{ steps.languages.outputs.success == 'true' && '✅ Sucesso' || '⚠️ Fallback' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Contributor Stats | ${{ steps.contributor.outputs.success == 'true' && '✅ Sucesso' || '⚠️ Fallback' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit realizado:** ${{ steps.changes.outputs.has_changes == 'true' && 'Sim' || 'Não (sem alterações)' }}" >> $GITHUB_STEP_SUMMARY
