@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "Fetching streak stats..."
           curl -sSf --max-time 30 \
-            "https://github-readme-streak-stats.herokuapp.com/?user=${{ env.GITHUB_USERNAME }}&theme=dark&hide_border=false&stroke=E4E2E2&ring=FB8C00&fire=FB8C00&currStreakLabel=FB8C00&background=151515&border=E4E2E2" \
+            "https://github-readme-streak-stats.herokuapp.com/?user=${{ env.GITHUB_USERNAME }}&theme=dark&hide_border=false&chage=1" \
             -o github-readme-streak-stats.svg.tmp
           
           # Valida se o SVG é válido (contém a tag svg)
@@ -50,7 +50,7 @@ jobs:
         run: |
           echo "Fetching most used languages..."
           curl -sSf --max-time 30 \
-            "https://github-readme-stats.vercel.app/api/top-langs/?username=${{ env.GITHUB_USERNAME }}&theme=dark&hide_border=false&include_all_commits=true&count_private=true&layout=compact&bg_color=151515&title_color=fff&text_color=9f9f9f&border_color=e4e2e2" \
+            "https://github-readme-stats.vercel.app/api/top-langs/?username=${{ env.GITHUB_USERNAME }}&theme=shadow_blue&hide_border=true&include_all_commits=true&count_private=true&layout=compact&update=9" \
             -o MostUsedLanguages.svg.tmp
           
           if grep -q '<svg' MostUsedLanguages.svg.tmp; then
@@ -69,7 +69,7 @@ jobs:
         run: |
           echo "Fetching contributor stats..."
           curl -sSf --max-time 30 \
-            "https://github-contributor-stats.vercel.app/api?username=${{ env.GITHUB_USERNAME }}&limit=5&theme=dark&combine_all_yearly_contributions=true&hide_border=false&bg_color=151515&title_color=fff&text_color=9f9f9f&border_color=e4e2e2" \
+            "https://github-contributor-stats.vercel.app/api?username=${{ env.GITHUB_USERNAME }}&limit=5&theme=dark&combine_all_yearly_contributions=false&update=5" \
             -o contributor-stats.svg.tmp
           
           if grep -q '<svg' contributor-stats.svg.tmp; then
