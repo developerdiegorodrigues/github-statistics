@@ -4,10 +4,13 @@
 
 Repositório para hospedagem de estatísticas do GitHub com **atualização automática diária** via GitHub Actions.
 
+## 🙏 Créditos
+
+Os SVGs são gerados a partir de serviços públicos da comunidade GitHub - [gprm](https://gprm.itsvg.in/). Este repositório apenas mantém cópias estáticas atualizadas para melhorar a disponibilidade no README.
+
 ## 🎯 Problema Resolvido
 
-APIs de estatísticas do GitHub (como GPRM) frequentemente ficam indisponíveis, deixando o README com aparência "quebrada". Este repositório resolve isso:
-
+Projetos públicos de geração de estatísticas para README oferecem um recurso muito útil à comunidade, mas podem enfrentar instabilidades, limites de uso ou custos de operação. Este repositório usa esses serviços como fonte de atualização e hospeda cópias estáticas dos SVGs para manter o README estável mesmo quando uma atualização não puder ser concluída.
 - ✅ **Hospedagem própria** dos SVGs no GitHub Pages
 - ✅ **Atualização automática** diária via GitHub Actions  
 - ✅ **Fallback inteligente** - mantém versão anterior se a API falhar
