@@ -2,8 +2,8 @@ name: Update GitHub Stats SVGs
 
 on:
   schedule:
-    # Executa diariamente às 06:00 UTC (03:00 BRT)
-    - cron: '0 6 * * *'
+    # Executa diariamente às 06:00 e 18:00 UTC (03:00 e 15:00 BRT)
+    - cron: '0 6,18 * * *'
   workflow_dispatch: # Permite execução manual
 
 env:
