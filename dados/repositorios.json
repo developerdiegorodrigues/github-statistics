@@ -1,5 +1,5 @@
 {
-  "geradoEm": "2026-09-18T01:22:13.041Z",
+  "geradoEm": "2026-09-18T02:27:36.480Z",
   "todos": [
     {
       "nome": "troo-x-video-downloader",
@@ -68,8 +68,8 @@
       "cor": "#f1e05a"
     },
     {
-      "nome": "ca13-google-dashboards",
-      "nomeCompleto": "developerdiegorodrigues/ca13-google-dashboards",
+      "nome": "ca13-gerenciador-tarefas",
+      "nomeCompleto": "developerdiegorodrigues/ca13-gerenciador-tarefas",
       "commits": 1,
       "prs": 0,
       "total": 1,
@@ -79,8 +79,8 @@
       "cor": "#3178c6"
     },
     {
-      "nome": "ca13-gerenciador-tarefas",
-      "nomeCompleto": "developerdiegorodrigues/ca13-gerenciador-tarefas",
+      "nome": "ca13-google-dashboards",
+      "nomeCompleto": "developerdiegorodrigues/ca13-google-dashboards",
       "commits": 1,
       "prs": 0,
       "total": 1,

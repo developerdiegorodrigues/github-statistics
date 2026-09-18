@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="182" viewBox="0 0 480 182" role="img" aria-labelledby="titulo desc">
   <title id="titulo">Linguagens mais usadas</title>
-  <desc id="desc">Linguagens mais usadas: TypeScript 35,2%, Java 30,9%, HTML 13,9%, CSS 9,2%, Python 7,2%, C++ 1,5%, Outras 1,9%.</desc>
+  <desc id="desc">Linguagens mais usadas: TypeScript 35,2%, Java 30,9%, HTML 13,9%, CSS 9,2%, Python 7,2%, C++ 1,5%, Outras 2,2%.</desc>
   <style>
     svg { --fundo: #0d1117; --superficie: #161b22; --borda: #30363d; --texto: #e6edf3; --textofraco: #8b949e; --destaque: #2f81f7; --chama: #f0883e; --sucesso: #3fb950; }
     @media (prefers-color-scheme: light) {
@@ -45,13 +45,13 @@
     <text class="titulo anim" style="animation-delay: 0.10s" x="20" y="34">Linguagens mais usadas</text>
     <g transform="translate(20 48)" clip-path="url(#recorte-barra)">
       <g class="cresce" style="animation-delay: 0.15s">
-      <rect x="0.00" y="0" width="155.08" height="12" fill="#3178c6"/>
-      <rect x="155.08" y="0" width="136.16" height="12" fill="#b07219"/>
-      <rect x="291.24" y="0" width="61.34" height="12" fill="#e34c26"/>
-      <rect x="352.57" y="0" width="40.45" height="12" fill="#663399"/>
-      <rect x="393.03" y="0" width="31.85" height="12" fill="#3572A5"/>
-      <rect x="424.87" y="0" width="6.67" height="12" fill="#f34b7d"/>
-      <rect x="431.55" y="0" width="8.45" height="12" fill="var(--textofraco)"/>
+      <rect x="0.00" y="0" width="154.66" height="12" fill="#3178c6"/>
+      <rect x="154.66" y="0" width="135.80" height="12" fill="#b07219"/>
+      <rect x="290.46" y="0" width="61.17" height="12" fill="#e34c26"/>
+      <rect x="351.64" y="0" width="40.35" height="12" fill="#663399"/>
+      <rect x="391.98" y="0" width="31.76" height="12" fill="#3572A5"/>
+      <rect x="423.74" y="0" width="6.66" height="12" fill="#f34b7d"/>
+      <rect x="430.40" y="0" width="9.60" height="12" fill="var(--textofraco)"/>
       </g>
     </g>
     <g class="anim" style="animation-delay: 0.35s">
@@ -87,6 +87,6 @@
     <g class="anim" style="animation-delay: 0.71s">
       <circle cx="256" cy="132" r="4.5" fill="var(--textofraco)"/>
       <text class="item" x="269" y="136">Outras</text>
-      <text class="legenda" x="448" y="136" text-anchor="end">1,9%</text>
+      <text class="legenda" x="448" y="136" text-anchor="end">2,2%</text>
     </g>
 </svg>
