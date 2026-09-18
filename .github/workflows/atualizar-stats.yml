@@ -1,0 +1,79 @@
+name: Atualizar estatísticas
+
+on:
+  schedule:
+    # 06:00 e 18:00 UTC = 03:00 e 15:00 em Brasília
+    - cron: '0 6,18 * * *'
+  workflow_dispatch:
+
+# Uma execução por vez: duas gerações simultâneas brigariam no push.
+concurrency:
+  group: atualizar-stats
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Conferir o token
+        env:
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
+        run: |
+          if [ -z "$STATS_TOKEN" ]; then
+            echo "::error::O secret STATS_TOKEN não está configurado."
+            echo "Crie um PAT clássico com escopos 'read:user' e 'repo' e cadastre em"
+            echo "Settings → Secrets and variables → Actions → New repository secret."
+            exit 1
+          fi
+
+      # Sem continue-on-error em nenhuma etapa: se a coleta ou a validação
+      # falharem, o job falha, nada é commitado e o Pages continua servindo
+      # os SVGs da execução anterior. Falha visível em vez de card quebrado.
+      - name: Coletar dados da API do GitHub
+        env:
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
+        run: node scripts/coletar.mjs
+
+      - name: Renderizar os cards
+        run: node scripts/renderizar.mjs
+
+      - name: Validar os cards
+        run: node scripts/validar.mjs
+
+      - name: Commitar se houver mudança
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dados svg LAST_UPDATED.txt
+          if git diff --cached --quiet; then
+            echo "mudou=false" >> "$GITHUB_OUTPUT"
+            echo "Nenhuma alteração."
+          else
+            echo "mudou=true" >> "$GITHUB_OUTPUT"
+            git commit -m "📊 Estatísticas atualizadas — $(date -u '+%Y-%m-%d')"
+            git push
+          fi
+
+      - name: Resumo
+        if: always()
+        run: |
+          {
+            echo "## 📊 Atualização das estatísticas"
+            echo
+            echo "| Item | Resultado |"
+            echo "|------|-----------|"
+            echo "| Coleta, renderização e validação | ${{ job.status == 'success' && '✅ OK' || '❌ Falhou' }} |"
+            echo "| Commit | ${{ steps.commit.outputs.mudou == 'true' && '✅ Feito' || '— sem alterações' }} |"
+            echo
+            echo "Fonte dos dados: API GraphQL do GitHub. Nenhum serviço de terceiros envolvido."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
   workflow_run:
-    workflows: ["Update GitHub Stats SVGs"]
+    workflows: ["Atualizar estatísticas"]
     types: [completed]
 
 permissions:

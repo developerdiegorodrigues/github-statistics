@@ -1,125 +1,134 @@
 # 📊 GitHub Statistics
 
-[![Update Stats](https://github.com/developerdiegorodrigues/github-statistics/actions/workflows/update-stats.yml/badge.svg)](https://github.com/developerdiegorodrigues/github-statistics/actions/workflows/update-stats.yml)
+[![Atualizar estatísticas](https://github.com/developerdiegorodrigues/github-statistics/actions/workflows/atualizar-stats.yml/badge.svg)](https://github.com/developerdiegorodrigues/github-statistics/actions/workflows/atualizar-stats.yml)
 
-Repositório para hospedagem de estatísticas do GitHub com **atualização automática diária** via GitHub Actions.
+Gerador dos cards de estatística do meu perfil do GitHub. Os dados vêm da API GraphQL do
+GitHub, a geração roda em GitHub Actions e os SVGs são servidos por GitHub Pages —
+**nenhum serviço de terceiros participa, nem na geração nem na exibição.**
 
-## 🙏 Créditos
+| | |
+|---|---|
+| **Contribuições** | ![Contribuições](./svg/contribuicoes.svg) |
+| **Linguagens** | ![Linguagens](./svg/linguagens.svg) |
+| **Repositórios** | ![Repositórios](./svg/repositorios.svg) |
 
-Os SVGs são gerados a partir de serviços públicos da comunidade GitHub - [gprm](https://gprm.itsvg.in/). Este repositório apenas mantém cópias estáticas atualizadas para melhorar a disponibilidade no README.
+## Por que existe
 
-## 🎯 Problema Resolvido
+A versão anterior baixava SVGs prontos de três serviços da comunidade
+(`github-readme-streak-stats`, `github-readme-stats`, `github-contributor-stats`) e guardava
+cópias. Quando um desses serviços falhava, ele devolvia um **card de erro** — que também é um
+SVG válido, e por isso passava pela validação `grep '<svg'` e era commitado por cima da cópia
+boa. O perfil acabava exibindo *"Failed to retrieve contributions"*.
 
-Projetos públicos de geração de estatísticas para README oferecem um recurso muito útil à comunidade, mas podem enfrentar instabilidades, limites de uso ou custos de operação. Este repositório usa esses serviços como fonte de atualização e hospeda cópias estáticas dos SVGs para manter o README estável mesmo quando uma atualização não puder ser concluída.
-- ✅ **Hospedagem própria** dos SVGs no GitHub Pages
-- ✅ **Atualização automática** diária via GitHub Actions  
-- ✅ **Fallback inteligente** - mantém versão anterior se a API falhar
-- ✅ **Validação de SVG** - só atualiza se o arquivo for válido
-- ✅ **Zero dependência externa** em tempo de exibição
+Agora não há de quem depender: os números saem da API do próprio GitHub e o desenho é feito aqui.
 
----
+## Como funciona
 
-## 🚀 Como Usar no Seu README
+```
+API GraphQL do GitHub
+        │
+        ▼
+scripts/coletar.mjs     →  dados/*.json     (agregados, versionados)
+        │
+        ▼
+scripts/renderizar.mjs  →  svg/*.svg        (função pura, sem rede)
+        │
+        ▼
+scripts/validar.mjs     →  aprova ou derruba o job
+        │
+        ▼
+commit + GitHub Pages
+```
 
-### URLs Disponíveis
+A separação em três etapas é o que permite ajustar o visual sem gastar chamada de API: o JSON
+guarda o agregado completo e a renderização decide o que mostrar.
 
-Após habilitar o GitHub Pages, use estas URLs no seu README:
+### Validação
+
+Um card só é commitado se passar em todas as checagens de `scripts/validar.mjs`:
+
+1. XML bem formado (balanceamento real de tags, não `grep`)
+2. Largura exata de 480px, para os três cards alinharem no README
+3. Presença dos marcadores de conteúdo esperados
+4. Ausência de padrões de falha (`failed to`, `error`, `undefined`, `NaN`…)
+5. Menos de 100 KB
+6. **Nenhuma URL externa** além dos namespaces obrigatórios do SVG
+7. Nenhum nome de repositório privado exposto
+
+Se qualquer uma falhar, o job falha em vermelho e **nada é commitado** — o Pages continua
+servindo os SVGs da execução anterior. Falha visível em vez de card quebrado.
+
+## URLs públicas
 
 ```markdown
-<!-- Streak Stats -->
-![GitHub Streak](https://developerdiegorodrigues.github.io/github-statistics/github-readme-streak-stats.svg)
-
-<!-- Most Used Languages -->
-![Top Langs](https://developerdiegorodrigues.github.io/github-statistics/MostUsedLanguages.svg)
-
-<!-- Contributor Stats -->
-![Contributor Stats](https://developerdiegorodrigues.github.io/github-statistics/contributor-stats.svg)
+![Contribuições](https://developerdiegorodrigues.github.io/github-statistics/svg/contribuicoes.svg)
+![Linguagens](https://developerdiegorodrigues.github.io/github-statistics/svg/linguagens.svg)
+![Repositórios](https://developerdiegorodrigues.github.io/github-statistics/svg/repositorios.svg)
 ```
 
-### Preview
+## Rodar localmente
 
-| Stat | Preview |
-|------|---------|
-| **Streak Stats** | ![GitHub Streak](./github-readme-streak-stats.svg) |
-| **Most Used Languages** | ![Top Langs](./MostUsedLanguages.svg) |
-| **Contributor Stats** | ![Contributor Stats](./contributor-stats.svg) |
+Sem `npm install`: os scripts usam só a biblioteca padrão do Node 20.
 
----
-
-## ⚙️ Configuração do GitHub Pages
-
-1. Vá em **Settings** → **Pages** no repositório
-2. Em **Source**, selecione **Deploy from a branch**
-3. Selecione a branch `main` e pasta `/ (root)`
-4. Clique em **Save**
-
-Após alguns minutos, os SVGs estarão disponíveis em:
-```
-https://developerdiegorodrigues.github.io/github-statistics/
+```bash
+export STATS_TOKEN=$(gh auth token)
+node scripts/coletar.mjs      # API  -> dados/*.json
+node scripts/renderizar.mjs   # dados -> svg/*.svg
+node scripts/validar.mjs      # portão de qualidade
 ```
 
----
+Para mexer só no visual, pule a coleta: `renderizar.mjs` trabalha em cima do JSON já versionado.
 
-## 🔄 Atualização Automática
+## Configuração
 
-O workflow executa **diariamente às 06:00 UTC (03:00 BRT)** e:
+Tudo em [`scripts/config.mjs`](scripts/config.mjs):
 
-1. 📥 Baixa os SVGs atualizados das APIs originais
-2. ✅ Valida se os arquivos são SVGs válidos
-3. 🔄 Usa fallback (versão anterior) se a API falhar
-4. 💾 Faz commit apenas se houver alterações
+| Opção | O que faz |
+|---|---|
+| `usuario` | Login do GitHub analisado |
+| `fuso` / `offsetFuso` | Fuso usado para fatiar o calendário em dias e calcular a sequência |
+| `privadosNasLinguagens` | Soma os bytes dos repositórios privados (sem expor nome algum) |
+| `privadosNosDestaques` | Se nomes de repositórios privados podem aparecer. **Mantenha `false`** |
+| `topLinguagens` / `topRepositorios` | Quantos itens cada card mostra |
+| `ignorarLinguagens` | Linguagens que não representam código autoral |
+| `ignorarRepositorios` | Repositórios fora do ranking de destaques |
 
-### Executar Manualmente
+A aparência (cores, tipografia, animações) fica em [`scripts/tema.mjs`](scripts/tema.mjs), e
+todo texto visível em [`scripts/i18n.mjs`](scripts/i18n.mjs).
 
-Você pode forçar uma atualização a qualquer momento:
+## Token
 
-1. Vá em **Actions** → **Update GitHub Stats SVGs**
-2. Clique em **Run workflow**
+O `GITHUB_TOKEN` padrão do Actions é escopado por repositório e não serve para consultas de
+escopo de usuário. É preciso um **PAT clássico** com `read:user` e `repo`, cadastrado como o
+secret `STATS_TOKEN` em *Settings → Secrets and variables → Actions*.
 
----
+> PAT clássico expira. Quando expirar, o workflow falha em vermelho e o perfil continua
+> mostrando os últimos SVGs válidos — dá tempo de renovar sem nada quebrar.
 
-## 🎨 Customização
-
-Para alterar o tema ou parâmetros dos SVGs, edite o arquivo [.github/workflows/update-stats.yml](.github/workflows/update-stats.yml).
-
-### Parâmetros Disponíveis
-
-#### Streak Stats
-```
-theme, hide_border, stroke, ring, fire, currStreakLabel, background, border
-```
-
-#### Most Used Languages  
-```
-theme, hide_border, layout, bg_color, title_color, text_color, border_color
-```
-
-#### Contributor Stats
-```
-theme, limit, combine_all_yearly_contributions, hide_border, bg_color, title_color, text_color, border_color
-```
-
----
-
-## 📁 Estrutura do Repositório
+## Estrutura
 
 ```
 github-statistics/
-├── .github/
-│   └── workflows/
-│       └── update-stats.yml    # Workflow de atualização
-├── contributor-stats.svg        # Stats de contribuições
-├── github-readme-streak-stats.svg # Stats de streak
-├── MostUsedLanguages.svg        # Linguagens mais usadas
-├── LAST_UPDATED.txt             # Timestamp da última atualização
-└── README.md                    # Este arquivo
+├── .github/workflows/
+│   ├── atualizar-stats.yml    # coleta, renderiza, valida, commita
+│   └── deploy-pages.yml       # publica no GitHub Pages
+├── scripts/
+│   ├── config.mjs             # o que é analisado e o que é mostrado
+│   ├── github.mjs             # cliente GraphQL (retry, rate limit)
+│   ├── coletar.mjs            # único ponto que fala com a rede
+│   ├── renderizar.mjs         # dados -> svg
+│   ├── validar.mjs            # portão de qualidade
+│   ├── tema.mjs               # tokens visuais e casca do card
+│   ├── i18n.mjs               # textos e formatação pt-BR
+│   └── cards/                 # um módulo por card
+├── dados/                     # agregados em JSON
+├── svg/                       # os cards publicados
+└── reference/Plan_v2.md       # o plano desta refatoração
 ```
 
----
+## Licença
 
-## 📜 Licença
-
-Este projeto está sob a licença MIT. Sinta-se livre para usar e adaptar!
+MIT.
 
 ---
 
