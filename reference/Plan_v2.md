@@ -13,18 +13,23 @@ Esse texto é o **card de erro do próprio serviço** `github-readme-streak-stat
 
 ### 1.2 Por que o fallback deste repositório não protegeu nada
 
-O README do perfil (`developerdiegorodrigues/developerdiegorodrigues/README.md`) **nunca apontou para este
-repositório**. Ele referencia os serviços de terceiros diretamente:
+> **Correção.** A primeira versão desta seção afirmava que o README do perfil nunca apontou para este
+> repositório. Isso estava errado: foi escrito a partir de um clone local do perfil que estava 8
+> commits atrasado. O texto abaixo reflete o estado real.
 
-| Seção do perfil | URL usada hoje no README do perfil |
+O README do perfil **já apontava** para as cópias servidas por este repositório via GitHub Pages:
+
+| Seção do perfil | URL usada no README do perfil |
 |---|---|
-| Streak | `github-readme-streak-stats.herokuapp.com/?user=...` |
-| Linguagens | `github-readme-stats.vercel.app/api/top-langs/?username=...` |
-| Repositórios | `github-contributor-stats.vercel.app/api?username=...` |
+| Streak | `.../github-statistics/github-readme-streak-stats.svg` |
+| Linguagens | `.../github-statistics/MostUsedLanguages.svg` |
+| Repositórios | `.../github-statistics/contributor-stats.svg` |
 
-Ou seja: o `github-statistics` baixa, valida, versiona e publica cópias estáticas via Pages — e o perfil
-ignora tudo isso e vai direto na fonte instável. Toda a infraestrutura de fallback existente é
-**código morto em relação ao objetivo**.
+Ou seja, a indireção funcionava. O que não funcionava era o conteúdo: o workflow baixava o card de
+**erro** do serviço externo, considerava válido, commitava, e o Pages passava a servir o erro. O
+perfil exibia fielmente aquilo que este repositório publicou.
+
+Isso torna o problema da seção 1.3 não um detalhe, mas a **causa direta** do card quebrado.
 
 ### 1.3 O fallback também está furado
 
@@ -51,8 +56,9 @@ e1668f7  Failed to retrieve       <- card de erro commitado
 
 Três problemas independentes, que o plano resolve de uma vez:
 
-1. O perfil depende de 3 serviços de terceiros em tempo de exibição.
-2. A validação de fallback não distingue sucesso de erro.
+1. O perfil depende de 3 serviços de terceiros como **origem** dos dados (ainda que a exibição já
+   passasse por este repositório).
+2. A validação de fallback não distingue sucesso de erro — é a causa direta do card quebrado.
 3. Os textos estão em inglês, num perfil escrito em pt-BR.
 
 ---
@@ -484,3 +490,55 @@ Cada fase é commitável e deixa o perfil funcionando.
 
 A Fase 5 é a única que toca o repositório do perfil, e só acontece depois que as URLs novas estão
 comprovadamente servindo pelo Pages.
+
+
+---
+
+## 13. Execução — o que foi feito
+
+Todas as cinco fases foram executadas em 2026-09-17.
+
+| Fase | Situação | Observações |
+|---|---|---|
+| 1. Fundação | ✅ | `config`, `github`, `tema`, `i18n`, `coletar`. 9 chamadas por execução |
+| 2. Primeiro card | ✅ | Layout de 3 colunas aprovado sem o mini-heatmap |
+| 3. Demais cards | ✅ | `linguagens` (480×182) e `repositorios` (480×222) |
+| 4. Automação | ✅ | `validar.mjs` + `atualizar-stats.yml`. Falta só cadastrar o secret |
+| 5. Corte | ✅ | README do perfil migrado; SVGs e workflow da v1 removidos |
+
+### Decisões tomadas durante a execução
+
+- **Privacidade dividida em duas flags.** A coleta enxergava só 11 repositórios públicos (168 KB),
+  porque a maior parte do código está em repositórios privados. O card de linguagens passou a somar
+  os bytes dos privados (33 repositórios, 14,71 MB), já que publica apenas um agregado. O card de
+  destaques continua **só público**, porque publica o nome do repositório.
+- **Repositórios de infraestrutura fora do ranking.** `developerdiegorodrigues` (38 commits de
+  edição de README) e `github-statistics` (commits do bot) dominavam o card sem representar
+  trabalho de desenvolvimento.
+
+### Bugs encontrados e corrigidos durante a implementação
+
+- **`transform` de CSS sobrescreve o atributo `transform` do SVG.** A animação de entrada jogava
+  todos os ícones para o canto superior esquerdo. A animação deixou de tocar em `transform`.
+- **`opacity: 0` + `animation-fill-mode: forwards` produz card em branco** em qualquer renderizador
+  que não execute animações. Trocado por `backwards`: o estado padrão passou a ser visível. Era a
+  mesma classe de fragilidade que o projeto se propôs a eliminar.
+
+### Evidência de que o portão de validação funciona
+
+O `validar.mjs` foi testado contra o card de erro real que a v1 commitou (commit `2b8eeeb`), contra
+um SVG com dependência externa reintroduzida e contra XML mal formado. Reprovou os três.
+
+Na hora do push, o remoto tinha 14 commits novos do bot da v1. Verificação do histórico: **3 deles
+haviam gravado o card de erro**, e o `origin/main` estava exatamente nesse estado — era o que a
+captura de tela mostrava.
+
+### Pendência — passo manual
+
+O secret `STATS_TOKEN` ainda **não está cadastrado**. Enquanto isso:
+
+- O perfil funciona normalmente, servindo os SVGs commitados nesta refatoração.
+- O workflow agendado falha em vermelho na etapa "Conferir o token", sem commitar nada.
+
+Para resolver: criar um PAT clássico com `read:user` e `repo` e cadastrar em
+*Settings → Secrets and variables → Actions* do repositório `github-statistics`.
