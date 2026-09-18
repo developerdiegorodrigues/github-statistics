@@ -11,8 +11,13 @@
         --nl-profile-banner-avatar-duration: 500ms;
       }
 
-      .nl-profile-banner__accent-stop { stop-color: var(--nl-profile-banner-accent); }
-      .nl-profile-banner__ring { fill: var(--nl-profile-banner-avatar-ring); }
+      .nl-profile-banner__accent-stop {
+        stop-color: var(--nl-profile-banner-accent);
+      }
+      
+      .nl-profile-banner__ring {
+        fill: var(--nl-profile-banner-avatar-ring);
+      }
 
       .nl-profile-banner__glow-x {
         animation: nl-profile-banner-glow-x linear infinite;
@@ -76,8 +81,8 @@
 
     <radialGradient id="nl-profile-banner-glow-gradient" gradientUnits="userSpaceOnUse" cx="600" cy="87.7837" r="606.3876">
       <stop offset="0" class="nl-profile-banner__accent-stop" stop-color="#B14914"/>
-      <stop offset="0.6" stop-color="#0d1117"/>
-      <stop offset="1" stop-color="#0d1117"/>
+      <stop offset="0.6" stop-color="#151515"/>
+      <stop offset="1" stop-color="#151515"/>
     </radialGradient>
 
     <pattern id="nl-profile-banner-glow" patternUnits="userSpaceOnUse" width="1200" height="175.5674">
@@ -85,10 +90,10 @@
     </pattern>
 
     <radialGradient id="nl-profile-banner-vignette" gradientUnits="userSpaceOnUse" cx="300" cy="43.8918" r="303.1938">
-      <stop offset="0" stop-color="#0d1117" stop-opacity="0"/>
-      <stop offset="0.3" stop-color="#0d1117" stop-opacity="0"/>
-      <stop offset="0.9" stop-color="#0d1117" stop-opacity="1"/>
-      <stop offset="1" stop-color="#0d1117" stop-opacity="1"/>
+      <stop offset="0" stop-color="#151515" stop-opacity="0"/>
+      <stop offset="0.3" stop-color="#151515" stop-opacity="0"/>
+      <stop offset="0.9" stop-color="#151515" stop-opacity="1"/>
+      <stop offset="1" stop-color="#151515" stop-opacity="1"/>
     </radialGradient>
 
     <pattern id="nl-profile-banner-mesh" patternUnits="userSpaceOnUse" width="7.92" height="13.7178">
@@ -103,7 +108,7 @@
   </defs>
 
   <g clip-path="url(#nl-profile-banner-cover-clip)">
-    <rect width="600" height="87.7837" fill="#101010"/>
+    <rect width="600" height="87.7837" fill="#0d1117"/>
 
     <g class="nl-profile-banner__glow-hue">
       <g class="nl-profile-banner__glow-x">
