@@ -5,33 +5,62 @@
 import { LARGURA, card, esc, atraso } from '../tema.mjs';
 import { textos, formatarNumero, formatarDataCompleta, formatarDataCurta, formatarIntervalo } from '../i18n.mjs';
 
-const ALTURA = 150;
+const ALTURA = 168;
 const COLUNAS = 3;
 const LARGURA_COLUNA = LARGURA / COLUNAS;
 
-const Y_ICONE = 34;
-const Y_NUMERO = 86;
-const Y_ROTULO = 108;
-const Y_LEGENDA = 127;
+/*
+ * Tamanho por ícone, para a chama (sequência atual) dominar o centro do card.
+ *
+ * Os números parecem arbitrários porque são normalizados pela TINTA do glifo,
+ * não pela caixa de 960. Cada símbolo do Material preenche a caixa de um jeito:
+ * add_box cobre 75%, local_fire_department só 67% e kid_star 83%. Igualar os
+ * valores nominais faria a estrela parecer a maior das três.
+ *
+ * Tamanho visual resultante: 31,5px / 38,0px / 31,7px.
+ * Ao trocar um ícone, remeça a tinta com getBBox() em vez de reaproveitar o número.
+ */
+const TAMANHO_ICONE_PADRAO = 48;
+const TAMANHOS_ICONE = { caixa: 42, chama: 55, estrela: 39 };
+const Y_ICONE_TOPO = 20;
+const Y_ICONE_BASE = Y_ICONE_TOPO + TAMANHO_ICONE_PADRAO; // base comum: ícones menores ficam alinhados pelo pé, não pelo topo
+const Y_NUMERO = 102;
+const Y_ROTULO = 124;
+const Y_LEGENDA = 143;
 
-/** Ícones em grade 24×24, desenhados aqui para não depender de fonte com emoji. */
+/*
+ * Ícones do Material Symbols Rounded (FILL 1, wght 400, opsz 24), sob licença
+ * Apache 2.0, com a geometria embutida aqui.
+ *
+ * Deliberadamente NÃO se carrega a folha de estilo do Google Fonts: ela seria
+ * uma dependência externa em tempo de exibição — exatamente o que este projeto
+ * existe para eliminar — e o validar.mjs reprovaria o card por URL externa.
+ *
+ * O Material Symbols desenha num sistema de coordenadas 0 -960 960 960, com o
+ * eixo Y crescendo para cima a partir da linha de base. Por isso o
+ * posicionamento abaixo translada para a BASE do ícone, não para o topo.
+ */
+const VIEWBOX_MATERIAL = 960;
+
 const ICONES = {
-  // Malha de contribuições
-  grade: [2, 9, 16]
-    .flatMap((y) => [2, 9, 16].map((x) => `<rect x="${x}" y="${y}" width="6" height="6" rx="1.5"/>`))
-    .join(''),
+  caixa:
+    'M440-440v120q0 17 11.5 28.5T480-280q17 0 28.5-11.5T520-320v-120h120q17 0 28.5-11.5T680-480q0-17-11.5-28.5T640-520H520v-120q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v120H320q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440h120ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Z',
   chama:
-    '<path d="M12 2.2c.6 2.9 2.4 4.3 3.9 6.1 1.5 1.8 2.1 3.5 2.1 5.4a6 6 0 1 1-12 0c0-1.1.3-2.2.9-3.1.3 1.2 1.1 2 2.1 2 1.3 0 2.1-1 2.1-2.5 0-1.9-1.2-2.9-1.2-4.8 0-1.2.7-2.4 2.1-3.1z"/>',
+    'M160-400q0-113 67-217t184-182q22-15 45.5-1.5T480-760v52q0 34 23.5 57t57.5 23q17 0 32.5-7.5T621-657q8-10 20.5-12.5T665-664q63 45 99 115t36 149q0 88-43 160.5T644-125q17-24 26.5-52.5T680-238q0-40-15-75.5T622-377L480-516 339-377q-29 29-44 64t-15 75q0 32 9.5 60.5T316-125q-70-42-113-114.5T160-400Zm320-4 85 83q17 17 26 38t9 45q0 49-35 83.5T480-120q-50 0-85-34.5T360-238q0-23 9-44.5t26-38.5l85-83Z',
   estrela:
-    '<path d="M12 2.5l2.9 5.9 6.6.9-4.8 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.5 9.3l6.6-.9z"/>',
+    'm305-704 112-145q12-16 28.5-23.5T480-880q18 0 34.5 7.5T543-849l112 145 170 57q26 8 41 29.5t15 47.5q0 12-3.5 24T866-523L756-367l4 164q1 35-23 59t-56 24q-2 0-22-3l-179-50-179 50q-5 2-11 2.5t-11 .5q-32 0-56-24t-23-59l4-165L95-523q-8-11-11.5-23T80-570q0-25 14.5-46.5T135-647l170-57Z',
 };
 
 function icone(nome, centroX, cor, indice) {
-  const escala = 18 / 24;
-  const x = centroX - 9;
-  // O `transform` de posicionamento fica no grupo externo e a animação no
-  // interno: em SVG, um `transform` vindo do CSS sobrescreveria o atributo.
-  return `    <g transform="translate(${x} ${Y_ICONE - 9}) scale(${escala})" fill="${cor}"><g class="anim" style="${atraso(indice)}">${ICONES[nome]}</g></g>`;
+  const tamanho = TAMANHOS_ICONE[nome] ?? TAMANHO_ICONE_PADRAO;
+  const escala = tamanho / VIEWBOX_MATERIAL;
+  const x = centroX - tamanho / 2;
+  // O transform de posicionamento fica no grupo externo e a animação no
+  // interno: em SVG, um transform vindo do CSS sobrescreveria o atributo.
+  return (
+    `    <g transform="translate(${x} ${Y_ICONE_BASE}) scale(${escala})" fill="${cor}">` +
+    `<g class="anim" style="${atraso(indice)}"><path d="${ICONES[nome]}"/></g></g>`
+  );
 }
 
 function coluna({ indice, numero, rotulo, legenda, nomeIcone, corIcone }) {
@@ -57,7 +86,7 @@ export default function renderizar(dados) {
       numero: formatarNumero(dados.total),
       rotulo: t.total,
       legenda: t.desde(formatarDataCompleta(dados.desde)),
-      nomeIcone: 'grade',
+      nomeIcone: 'caixa',
       corIcone: 'var(--destaque)',
     },
     {
@@ -81,7 +110,7 @@ export default function renderizar(dados) {
   const divisorias = [1, 2]
     .map(
       (i) =>
-        `    <line x1="${LARGURA_COLUNA * i}" y1="26" x2="${LARGURA_COLUNA * i}" y2="${ALTURA - 26}" stroke="var(--borda)" stroke-width="1"/>`,
+        `    <line x1="${LARGURA_COLUNA * i}" y1="24" x2="${LARGURA_COLUNA * i}" y2="${ALTURA - 24}" stroke="var(--borda)" stroke-width="1"/>`,
     )
     .join('\n');
 

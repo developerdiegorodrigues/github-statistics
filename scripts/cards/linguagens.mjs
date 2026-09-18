@@ -97,7 +97,7 @@ export default function renderizar(dados) {
   return card({
     altura,
     titulo: t.titulo,
-    descricao: `Linguagens mais usadas: ${descricao}.`,
+    descricao: `${t.titulo}: ${descricao}.`,
     cssExtra: '',
     conteudo:
       `    <defs><clipPath id="recorte-barra">` +

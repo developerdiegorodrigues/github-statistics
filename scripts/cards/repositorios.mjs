@@ -61,7 +61,7 @@ export default function renderizar(dados) {
   return card({
     altura,
     titulo: t.titulo,
-    descricao: `Repositórios em destaque: ${descricao}.`,
+    descricao: `${t.titulo}: ${descricao}.`,
     conteudo,
   });
 }

@@ -20,7 +20,7 @@ export const textos = {
     vazio: 'Nenhuma linguagem encontrada',
   },
   repositorios: {
-    titulo: 'Repositórios em destaque',
+    titulo: 'Alguns dos repositórios públicos',
     commits: (n) => (n === 1 ? '1 commit' : `${formatarNumero(n)} commits`),
     vazio: 'Nenhum repositório encontrado',
   },

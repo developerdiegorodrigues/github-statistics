@@ -8,6 +8,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { LARGURA } from './tema.mjs';
+import { textos } from './i18n.mjs';
 
 const TAMANHO_MAXIMO = 100 * 1024;
 const ALTURA_MINIMA = 80;
@@ -27,10 +28,16 @@ const PADROES_PROIBIDOS = [
   /\[object Object\]/,
 ];
 
+/*
+ * Os marcadores de título são lidos do i18n, não copiados. Antes eram regex
+ * fixas: renomear um card passava na renderização e só quebrava aqui, o que
+ * derrubaria o workflow por um motivo que não é um defeito real.
+ * Strings são comparadas literalmente; regex, por padrão.
+ */
 const ESPERADO = {
-  'contribuicoes.svg': { marcadores: [/Contribuições/, /\d/], dados: 'contribuicoes.json' },
-  'linguagens.svg': { marcadores: [/Linguagens mais usadas/, /%/, /\d/], dados: 'linguagens.json' },
-  'repositorios.svg': { marcadores: [/Repositórios em destaque/, /commit/, /\d/], dados: 'repositorios.json' },
+  'contribuicoes.svg': { marcadores: [textos.contribuicoes.total, /\d/], dados: 'contribuicoes.json' },
+  'linguagens.svg': { marcadores: [textos.linguagens.titulo, /%/, /\d/], dados: 'linguagens.json' },
+  'repositorios.svg': { marcadores: [textos.repositorios.titulo, /commit/, /\d/], dados: 'repositorios.json' },
 };
 
 /**
@@ -108,7 +115,8 @@ function validar(arquivo, regras) {
 
   // 3. Marcadores de conteúdo real
   for (const marcador of regras.marcadores) {
-    if (!marcador.test(svg)) erros.push(`conteúdo esperado ausente: ${marcador}`);
+    const presente = typeof marcador === 'string' ? svg.includes(marcador) : marcador.test(svg);
+    if (!presente) erros.push(`conteúdo esperado ausente: ${marcador}`);
   }
 
   // 4. Padrões de erro
