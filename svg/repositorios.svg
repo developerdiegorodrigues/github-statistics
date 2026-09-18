@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="222" viewBox="0 0 480 222" role="img" aria-labelledby="titulo desc">
   <title id="titulo">Alguns dos repositórios públicos</title>
-  <desc id="desc">Alguns dos repositórios públicos: blender-codex-bridge com 22 contribuições, transcriber com 18 contribuições, troo-x-video-downloader com 9 contribuições, arena-sp3-fix com 6 contribuições, window-handle-explorer com 4 contribuições.</desc>
+  <desc id="desc">Alguns dos repositórios públicos: blender-codex-bridge com 23 contribuições, transcriber com 18 contribuições, troo-x-video-downloader com 9 contribuições, arena-sp3-fix com 6 contribuições, window-handle-explorer com 4 contribuições.</desc>
   <style>
     svg { --fundo: #0d1117; --superficie: #161b22; --borda: #30363d; --texto: #e6edf3; --textofraco: #8b949e; --destaque: #2f81f7; --chama: #f0883e; --sucesso: #3fb950; }
     @media (prefers-color-scheme: light) {
@@ -37,7 +37,7 @@
     <g class="anim" style="animation-delay: 0.25s">
       <circle cx="24" cy="60" r="4.5" fill="#3572A5"/>
       <text class="item" x="37" y="64">blender-codex-bridge</text>
-      <text class="legenda" x="460" y="64" text-anchor="end">Python · 22 commits</text>
+      <text class="legenda" x="460" y="64" text-anchor="end">Python · 23 commits</text>
       <g transform="translate(37 71)">
         <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
         <g class="cresce" style="animation-delay: 0.30s">
@@ -52,7 +52,7 @@
       <g transform="translate(37 103)">
         <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
         <g class="cresce" style="animation-delay: 0.38s">
-          <rect x="0" y="0" width="346.09" height="4" rx="2" fill="#3572A5"/>
+          <rect x="0" y="0" width="331.04" height="4" rx="2" fill="#3572A5"/>
         </g>
       </g>
     </g>
@@ -63,7 +63,7 @@
       <g transform="translate(37 135)">
         <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
         <g class="cresce" style="animation-delay: 0.46s">
-          <rect x="0" y="0" width="173.05" height="4" rx="2" fill="#f1e05a"/>
+          <rect x="0" y="0" width="165.52" height="4" rx="2" fill="#f1e05a"/>
         </g>
       </g>
     </g>
@@ -74,7 +74,7 @@
       <g transform="translate(37 167)">
         <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
         <g class="cresce" style="animation-delay: 0.54s">
-          <rect x="0" y="0" width="115.36" height="4" rx="2" fill="#3572A5"/>
+          <rect x="0" y="0" width="110.35" height="4" rx="2" fill="#3572A5"/>
         </g>
       </g>
     </g>
@@ -85,7 +85,7 @@
       <g transform="translate(37 199)">
         <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
         <g class="cresce" style="animation-delay: 0.62s">
-          <rect x="0" y="0" width="76.91" height="4" rx="2" fill="#f34b7d"/>
+          <rect x="0" y="0" width="73.57" height="4" rx="2" fill="#f34b7d"/>
         </g>
       </g>
     </g>
