@@ -16,7 +16,7 @@ import repositorios from './cards/repositorios.mjs';
 const CARDS = [
   // O banner é estático: não tem arquivo de dados, por isso `dados: null`.
   { dados: null, svg: 'banner.svg', renderizar: banner },
-  { dados: null, svg: 'Banner_2.svg', renderizar: banner2 },
+  { dados: null, svg: 'banner_2.svg', renderizar: banner2 },
   { dados: 'contribuicoes.json', svg: 'contribuicoes.svg', renderizar: contribuicoes },
   { dados: 'linguagens.json', svg: 'linguagens.svg', renderizar: linguagens },
   { dados: 'repositorios.json', svg: 'repositorios.svg', renderizar: repositorios },

@@ -28,12 +28,82 @@ import { embutir } from '../imagem.mjs';
 const LARGURA = 600;
 const ALTURA = 270;
 
-const AVATAR = 'assets/avatar_x300.webp';
+/*
+ * Altura da capa — o "quadro principal". Era 150 (a medida do app);
+ * -10% e depois mais -10% sobre o resultado: 150 * 0.9 * 0.9 = 121.5.
+ *
+ * Três coisas derivam dela e precisam acompanhar, senão o padrão de fundo
+ * descola da capa: o ladrilho do brilho (200% x 200% da capa), a vinheta (no
+ * tamanho exato da capa) e o path de recorte com os cantos arredondados.
+ * Por isso tudo abaixo é calculado, não escrito à mão.
+ */
+const ALTURA_CAPA = 150 * 0.9 * 0.9;
+
+const RAIO_ESQ = 9.6;
+const RAIO_DIR = 14.4;
+
+/** Capa com os quatro cantos arredondados, no sentido horário a partir do topo. */
+const CAPA_PATH = [
+  `M${RAIO_ESQ} 0`,
+  `H${LARGURA - RAIO_DIR}`,
+  `A${RAIO_DIR} ${RAIO_DIR} 0 0 1 ${LARGURA} ${RAIO_DIR}`,
+  `V${ALTURA_CAPA - RAIO_DIR}`,
+  `A${RAIO_DIR} ${RAIO_DIR} 0 0 1 ${LARGURA - RAIO_DIR} ${ALTURA_CAPA}`,
+  `H${RAIO_ESQ}`,
+  `A${RAIO_ESQ} ${RAIO_ESQ} 0 0 1 0 ${ALTURA_CAPA - RAIO_ESQ}`,
+  `V${RAIO_ESQ}`,
+  `A${RAIO_ESQ} ${RAIO_ESQ} 0 0 1 ${RAIO_ESQ} 0`,
+  'Z',
+].join(' ');
+
+/** Brilho: ladrilho de 200% x 200% da capa; o raio vai até o canto mais distante. */
+const BRILHO_W = LARGURA * 2;
+const BRILHO_H = ALTURA_CAPA * 2;
+const BRILHO_R = Math.hypot(BRILHO_W / 2, BRILHO_H / 2);
+
+/** Vinheta: no tamanho exato da capa, mesma regra de raio. */
+const VINHETA_CY = ALTURA_CAPA / 2;
+const VINHETA_R = Math.hypot(LARGURA / 2, ALTURA_CAPA / 2);
+
+const AVATAR = 'assets/avatar2_x300.webp';
+
+/*
+ * Geometria do avatar. O original do app usava anel de raio 100 e foto de 180px;
+ * ESCALA reduz o conjunto mantendo o centro, que continua straddling a borda
+ * inferior da capa.
+ */
+const ESCALA = 0.6;
+/** Cor do anel do avatar. */
+const COR_ANEL = '#0d1117';
+const AVATAR_CX = LARGURA / 2;
+/** O centro fica 5 abaixo da borda da capa, como no original (150 -> 155). */
+const AVATAR_CY = ALTURA_CAPA + 5;
+const ANEL_R = 100 * ESCALA;
+const FOTO_R = 90 * ESCALA;
+const FOTO_D = FOTO_R * 2;
+
+/*
+ * Escala da malha hexagonal do fundo.
+ *
+ * No app o ladrilho de 12px fica sobre uma capa de ~1250px, o que dá ~100 anéis
+ * na largura. Aqui a capa tem 600 unidades, então o mesmo ladrilho de 12 rende
+ * ~50 anéis — metade da densidade da referência.
+ *
+ * Reduzir só o raio dos círculos (tentativa anterior) deixa os anéis menores e
+ * MAIS espaçados, porque o ladrilho não muda: é o oposto do efeito desejado.
+ * Para aproximar a densidade do app, o ladrilho inteiro precisa encolher —
+ * posições, raio e traço juntos.
+ */
+const MALHA_ESCALA = 0.5;
+const MALHA_W = 12 * MALHA_ESCALA;
+const MALHA_H = 20.7846097 * MALHA_ESCALA;
+const MALHA_R = 5.5 * MALHA_ESCALA;
+const MALHA_TRACO = 1 * MALHA_ESCALA;
 
 const CSS = `
       .nl-profile-banner {
         --nl-profile-banner-accent: #B14914;
-        --nl-profile-banner-avatar-ring: #3d3d3d;
+        --nl-profile-banner-avatar-ring: ${COR_ANEL};
         --nl-smart-termite-shift-duration: 80s;
         --nl-smart-termite-filter-duration: 12s;
         --nl-profile-banner-avatar-duration: 500ms;
@@ -59,19 +129,19 @@ const CSS = `
 
       .nl-profile-banner__avatar {
         transform-box: view-box;
-        transform-origin: 300px 155px;
+        transform-origin: ${AVATAR_CX}px ${AVATAR_CY}px;
         animation: nl-profile-banner-avatar-in var(--nl-profile-banner-avatar-duration)
           cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       }
 
       @keyframes nl-profile-banner-glow-x {
         from { transform: translateX(0); }
-        to   { transform: translateX(1200px); }
+        to   { transform: translateX(${BRILHO_W}px); }
       }
 
       @keyframes nl-profile-banner-glow-y {
         from { transform: translateY(0); }
-        to   { transform: translateY(-300px); }
+        to   { transform: translateY(-${BRILHO_H}px); }
       }
 
       @keyframes nl-profile-banner-hue {
@@ -104,59 +174,59 @@ export default function renderizar() {
     <style>${CSS}    </style>
 
     <clipPath id="nl-profile-banner-cover-clip">
-      <path d="M9.6 0 H585.6 A14.4 14.4 0 0 1 600 14.4 V135.6 A14.4 14.4 0 0 1 585.6 150 H9.6 A9.6 9.6 0 0 1 0 140.4 V9.6 A9.6 9.6 0 0 1 9.6 0 Z"/>
+      <path d="${CAPA_PATH}"/>
     </clipPath>
 
     <clipPath id="nl-profile-banner-avatar-clip">
-      <circle cx="300" cy="155" r="90"/>
+      <circle cx="${AVATAR_CX}" cy="${AVATAR_CY}" r="${FOTO_R}"/>
     </clipPath>
 
-    <radialGradient id="nl-profile-banner-glow-gradient" gradientUnits="userSpaceOnUse" cx="600" cy="150" r="618.4658">
+    <radialGradient id="nl-profile-banner-glow-gradient" gradientUnits="userSpaceOnUse" cx="${BRILHO_W / 2}" cy="${BRILHO_H / 2}" r="${BRILHO_R}">
       <stop offset="0" class="nl-profile-banner__accent-stop" stop-color="#B14914"/>
       <stop offset="0.6" stop-color="#202020"/>
       <stop offset="1" stop-color="#202020"/>
     </radialGradient>
 
-    <pattern id="nl-profile-banner-glow" patternUnits="userSpaceOnUse" width="1200" height="300">
-      <rect width="1200" height="300" fill="url(#nl-profile-banner-glow-gradient)"/>
+    <pattern id="nl-profile-banner-glow" patternUnits="userSpaceOnUse" width="${BRILHO_W}" height="${BRILHO_H}">
+      <rect width="${BRILHO_W}" height="${BRILHO_H}" fill="url(#nl-profile-banner-glow-gradient)"/>
     </pattern>
 
-    <radialGradient id="nl-profile-banner-vignette" gradientUnits="userSpaceOnUse" cx="300" cy="75" r="309.2329">
+    <radialGradient id="nl-profile-banner-vignette" gradientUnits="userSpaceOnUse" cx="${LARGURA / 2}" cy="${VINHETA_CY}" r="${VINHETA_R}">
       <stop offset="0" stop-color="#202020" stop-opacity="0"/>
       <stop offset="0.3" stop-color="#202020" stop-opacity="0"/>
       <stop offset="0.9" stop-color="#202020" stop-opacity="1"/>
       <stop offset="1" stop-color="#202020" stop-opacity="1"/>
     </radialGradient>
 
-    <pattern id="nl-profile-banner-mesh" patternUnits="userSpaceOnUse" width="12" height="20.7846097">
-      <g fill="none" stroke="#202020" stroke-width="1">
-        <circle cx="6" cy="10.3923049" r="5.5"/>
-        <circle cx="0" cy="0" r="5.5"/>
-        <circle cx="12" cy="0" r="5.5"/>
-        <circle cx="0" cy="20.7846097" r="5.5"/>
-        <circle cx="12" cy="20.7846097" r="5.5"/>
+    <pattern id="nl-profile-banner-mesh" patternUnits="userSpaceOnUse" width="${MALHA_W}" height="${MALHA_H}">
+      <g fill="none" stroke="#202020" stroke-width="${MALHA_TRACO}">
+        <circle cx="${MALHA_W / 2}" cy="${MALHA_H / 2}" r="${MALHA_R}"/>
+        <circle cx="0" cy="0" r="${MALHA_R}"/>
+        <circle cx="${MALHA_W}" cy="0" r="${MALHA_R}"/>
+        <circle cx="0" cy="${MALHA_H}" r="${MALHA_R}"/>
+        <circle cx="${MALHA_W}" cy="${MALHA_H}" r="${MALHA_R}"/>
       </g>
     </pattern>
   </defs>
 
   <g clip-path="url(#nl-profile-banner-cover-clip)">
-    <rect width="600" height="150" fill="#101010"/>
+    <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="#101010"/>
 
     <g class="nl-profile-banner__glow-hue">
       <g class="nl-profile-banner__glow-x">
         <g class="nl-profile-banner__glow-y">
-          <rect x="-1200" y="-300" width="2400" height="900" fill="url(#nl-profile-banner-glow)"/>
+          <rect x="${-BRILHO_W}" y="${-BRILHO_H}" width="${BRILHO_W * 2}" height="${BRILHO_H * 3}" fill="url(#nl-profile-banner-glow)"/>
         </g>
       </g>
     </g>
 
-    <rect width="600" height="150" fill="url(#nl-profile-banner-vignette)"/>
-    <rect width="600" height="150" fill="url(#nl-profile-banner-mesh)"/>
+    <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="url(#nl-profile-banner-vignette)"/>
+    <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="url(#nl-profile-banner-mesh)"/>
   </g>
 
   <g class="nl-profile-banner__avatar">
-    <circle class="nl-profile-banner__ring" cx="300" cy="155" r="100" fill="#3d3d3d"/>
-    <image x="210" y="65" width="180" height="180" preserveAspectRatio="xMidYMid slice" clip-path="url(#nl-profile-banner-avatar-clip)" href="${avatar}"/>
+    <circle class="nl-profile-banner__ring" cx="${AVATAR_CX}" cy="${AVATAR_CY}" r="${ANEL_R}" fill="${COR_ANEL}"/>
+    <image x="${AVATAR_CX - FOTO_R}" y="${AVATAR_CY - FOTO_R}" width="${FOTO_D}" height="${FOTO_D}" preserveAspectRatio="xMidYMid slice" clip-path="url(#nl-profile-banner-avatar-clip)" href="${avatar}"/>
   </g>
 </svg>
 `;

@@ -21,7 +21,7 @@ GitHub Pages — **nenhum serviço de terceiros participa, nem na geração nem 
 
 Versão alternativa, sem texto, com o padrão *smart-termite* herdado do app:
 
-![Banner alternativo](./svg/Banner_2.svg)
+![Banner alternativo](./svg/banner_2.svg)
 
 Os dois são estáticos: não consomem `dados/*.json`. O avatar vai **embutido como data URI**,
 e isso não é escolha estética — um SVG carregado via `<img>`, que é como o GitHub renderiza
@@ -83,7 +83,7 @@ O banner foi desenhado para ocupar 100% da largura, então vale a tag `<img>`:
 
 ```markdown
 <img alt="Diego Rodrigues" src="https://developerdiegorodrigues.github.io/github-statistics/svg/banner.svg" width="100%">
-<img alt="Diego Rodrigues" src="https://developerdiegorodrigues.github.io/github-statistics/svg/Banner_2.svg" width="100%">
+<img alt="Diego Rodrigues" src="https://developerdiegorodrigues.github.io/github-statistics/svg/banner_2.svg" width="100%">
 
 ![Contribuições](https://developerdiegorodrigues.github.io/github-statistics/svg/contribuicoes.svg)
 ![Linguagens](https://developerdiegorodrigues.github.io/github-statistics/svg/linguagens.svg)

@@ -42,7 +42,7 @@ const ESPERADO = {
     marcadores: [textos.banner.nome, textos.banner.papel, 'data:image/webp;base64,'],
   },
   // Sem texto: os marcadores provam o avatar embutido e a estrutura do padrão.
-  'Banner_2.svg': {
+  'banner_2.svg': {
     largura: 600,
     altura: 270,
     marcadores: ['data:image/webp;base64,', 'nl-profile-banner-mesh', 'nl-profile-banner-avatar-clip'],
