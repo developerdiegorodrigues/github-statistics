@@ -29,15 +29,23 @@ const LARGURA = 600;
 const ALTURA = 270;
 
 /*
- * Altura da capa — o "quadro principal". Era 150 (a medida do app);
- * -10% e depois mais -10% sobre o resultado: 150 * 0.9 * 0.9 = 121.5.
+ * Arredonda para 4 casas. As medidas derivam de fatores percentuais
+ * encadeados, e sem isso a cauda binária vaza para o SVG publicado
+ * (103.27499999999999 em vez de 103.275). 4 casas sobram para coordenadas.
+ */
+const n = (v) => Number(v.toFixed(4));
+
+/*
+ * Altura da capa — o "quadro principal". Era 150 (a medida do app), e vem
+ * sendo reduzida por fatores sucessivos sobre o valor corrente:
+ * -10%, -10%, -15%, -15%  =>  150 * 0.9 * 0.9 * 0.85 * 0.85 = 87.7838.
  *
  * Três coisas derivam dela e precisam acompanhar, senão o padrão de fundo
  * descola da capa: o ladrilho do brilho (200% x 200% da capa), a vinheta (no
  * tamanho exato da capa) e o path de recorte com os cantos arredondados.
  * Por isso tudo abaixo é calculado, não escrito à mão.
  */
-const ALTURA_CAPA = 150 * 0.9 * 0.9;
+const ALTURA_CAPA = n(150 * 0.9 * 0.9 * 0.85 * 0.85);
 
 const RAIO_ESQ = 9.6;
 const RAIO_DIR = 14.4;
@@ -47,10 +55,10 @@ const CAPA_PATH = [
   `M${RAIO_ESQ} 0`,
   `H${LARGURA - RAIO_DIR}`,
   `A${RAIO_DIR} ${RAIO_DIR} 0 0 1 ${LARGURA} ${RAIO_DIR}`,
-  `V${ALTURA_CAPA - RAIO_DIR}`,
+  `V${n(ALTURA_CAPA - RAIO_DIR)}`,
   `A${RAIO_DIR} ${RAIO_DIR} 0 0 1 ${LARGURA - RAIO_DIR} ${ALTURA_CAPA}`,
   `H${RAIO_ESQ}`,
-  `A${RAIO_ESQ} ${RAIO_ESQ} 0 0 1 0 ${ALTURA_CAPA - RAIO_ESQ}`,
+  `A${RAIO_ESQ} ${RAIO_ESQ} 0 0 1 0 ${n(ALTURA_CAPA - RAIO_ESQ)}`,
   `V${RAIO_ESQ}`,
   `A${RAIO_ESQ} ${RAIO_ESQ} 0 0 1 ${RAIO_ESQ} 0`,
   'Z',
@@ -58,12 +66,12 @@ const CAPA_PATH = [
 
 /** Brilho: ladrilho de 200% x 200% da capa; o raio vai até o canto mais distante. */
 const BRILHO_W = LARGURA * 2;
-const BRILHO_H = ALTURA_CAPA * 2;
-const BRILHO_R = Math.hypot(BRILHO_W / 2, BRILHO_H / 2);
+const BRILHO_H = n(ALTURA_CAPA * 2);
+const BRILHO_R = n(Math.hypot(BRILHO_W / 2, BRILHO_H / 2));
 
 /** Vinheta: no tamanho exato da capa, mesma regra de raio. */
-const VINHETA_CY = ALTURA_CAPA / 2;
-const VINHETA_R = Math.hypot(LARGURA / 2, ALTURA_CAPA / 2);
+const VINHETA_CY = n(ALTURA_CAPA / 2);
+const VINHETA_R = n(Math.hypot(LARGURA / 2, ALTURA_CAPA / 2));
 
 const AVATAR = 'assets/avatar2_x300.webp';
 
@@ -75,9 +83,14 @@ const AVATAR = 'assets/avatar2_x300.webp';
 const ESCALA = 0.6;
 /** Cor do anel do avatar. */
 const COR_ANEL = '#0d1117';
+/*
+ * Tom escuro do padrão de fundo (brilho, vinheta e malha). No app era #202020;
+ * aqui usa o fundo escuro do GitHub, para o banner se fundir com a página.
+ */
+const COR_PADRAO = '#0d1117';
 const AVATAR_CX = LARGURA / 2;
 /** O centro fica 5 abaixo da borda da capa, como no original (150 -> 155). */
-const AVATAR_CY = ALTURA_CAPA + 5;
+const AVATAR_CY = n(ALTURA_CAPA + 5);
 const ANEL_R = 100 * ESCALA;
 const FOTO_R = 90 * ESCALA;
 const FOTO_D = FOTO_R * 2;
@@ -94,11 +107,11 @@ const FOTO_D = FOTO_R * 2;
  * Para aproximar a densidade do app, o ladrilho inteiro precisa encolher —
  * posições, raio e traço juntos.
  */
-const MALHA_ESCALA = 0.5;
-const MALHA_W = 12 * MALHA_ESCALA;
-const MALHA_H = 20.7846097 * MALHA_ESCALA;
-const MALHA_R = 5.5 * MALHA_ESCALA;
-const MALHA_TRACO = 1 * MALHA_ESCALA;
+const MALHA_ESCALA = n(0.5 * 1.1 * 1.2);
+const MALHA_W = n(12 * MALHA_ESCALA);
+const MALHA_H = n(20.7846097 * MALHA_ESCALA);
+const MALHA_R = n(5.5 * MALHA_ESCALA);
+const MALHA_TRACO = n(1 * MALHA_ESCALA);
 
 const CSS = `
       .nl-profile-banner {
@@ -181,10 +194,10 @@ export default function renderizar() {
       <circle cx="${AVATAR_CX}" cy="${AVATAR_CY}" r="${FOTO_R}"/>
     </clipPath>
 
-    <radialGradient id="nl-profile-banner-glow-gradient" gradientUnits="userSpaceOnUse" cx="${BRILHO_W / 2}" cy="${BRILHO_H / 2}" r="${BRILHO_R}">
+    <radialGradient id="nl-profile-banner-glow-gradient" gradientUnits="userSpaceOnUse" cx="${n(BRILHO_W / 2)}" cy="${n(BRILHO_H / 2)}" r="${BRILHO_R}">
       <stop offset="0" class="nl-profile-banner__accent-stop" stop-color="#B14914"/>
-      <stop offset="0.6" stop-color="#202020"/>
-      <stop offset="1" stop-color="#202020"/>
+      <stop offset="0.6" stop-color="${COR_PADRAO}"/>
+      <stop offset="1" stop-color="${COR_PADRAO}"/>
     </radialGradient>
 
     <pattern id="nl-profile-banner-glow" patternUnits="userSpaceOnUse" width="${BRILHO_W}" height="${BRILHO_H}">
@@ -192,15 +205,15 @@ export default function renderizar() {
     </pattern>
 
     <radialGradient id="nl-profile-banner-vignette" gradientUnits="userSpaceOnUse" cx="${LARGURA / 2}" cy="${VINHETA_CY}" r="${VINHETA_R}">
-      <stop offset="0" stop-color="#202020" stop-opacity="0"/>
-      <stop offset="0.3" stop-color="#202020" stop-opacity="0"/>
-      <stop offset="0.9" stop-color="#202020" stop-opacity="1"/>
-      <stop offset="1" stop-color="#202020" stop-opacity="1"/>
+      <stop offset="0" stop-color="${COR_PADRAO}" stop-opacity="0"/>
+      <stop offset="0.3" stop-color="${COR_PADRAO}" stop-opacity="0"/>
+      <stop offset="0.9" stop-color="${COR_PADRAO}" stop-opacity="1"/>
+      <stop offset="1" stop-color="${COR_PADRAO}" stop-opacity="1"/>
     </radialGradient>
 
     <pattern id="nl-profile-banner-mesh" patternUnits="userSpaceOnUse" width="${MALHA_W}" height="${MALHA_H}">
-      <g fill="none" stroke="#202020" stroke-width="${MALHA_TRACO}">
-        <circle cx="${MALHA_W / 2}" cy="${MALHA_H / 2}" r="${MALHA_R}"/>
+      <g fill="none" stroke="${COR_PADRAO}" stroke-width="${MALHA_TRACO}">
+        <circle cx="${n(MALHA_W / 2)}" cy="${n(MALHA_H / 2)}" r="${MALHA_R}"/>
         <circle cx="0" cy="0" r="${MALHA_R}"/>
         <circle cx="${MALHA_W}" cy="0" r="${MALHA_R}"/>
         <circle cx="0" cy="${MALHA_H}" r="${MALHA_R}"/>
@@ -215,7 +228,7 @@ export default function renderizar() {
     <g class="nl-profile-banner__glow-hue">
       <g class="nl-profile-banner__glow-x">
         <g class="nl-profile-banner__glow-y">
-          <rect x="${-BRILHO_W}" y="${-BRILHO_H}" width="${BRILHO_W * 2}" height="${BRILHO_H * 3}" fill="url(#nl-profile-banner-glow)"/>
+          <rect x="${-BRILHO_W}" y="${n(-BRILHO_H)}" width="${BRILHO_W * 2}" height="${n(BRILHO_H * 3)}" fill="url(#nl-profile-banner-glow)"/>
         </g>
       </g>
     </g>
@@ -226,7 +239,7 @@ export default function renderizar() {
 
   <g class="nl-profile-banner__avatar">
     <circle class="nl-profile-banner__ring" cx="${AVATAR_CX}" cy="${AVATAR_CY}" r="${ANEL_R}" fill="${COR_ANEL}"/>
-    <image x="${AVATAR_CX - FOTO_R}" y="${AVATAR_CY - FOTO_R}" width="${FOTO_D}" height="${FOTO_D}" preserveAspectRatio="xMidYMid slice" clip-path="url(#nl-profile-banner-avatar-clip)" href="${avatar}"/>
+    <image x="${n(AVATAR_CX - FOTO_R)}" y="${n(AVATAR_CY - FOTO_R)}" width="${FOTO_D}" height="${FOTO_D}" preserveAspectRatio="xMidYMid slice" clip-path="url(#nl-profile-banner-avatar-clip)" href="${avatar}"/>
   </g>
 </svg>
 `;
