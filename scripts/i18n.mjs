@@ -15,7 +15,7 @@ export const textos = {
     dia: (n) => (n === 1 ? '1 dia' : `${formatarNumero(n)} dias`),
   },
   linguagens: {
-    titulo: 'Linguagens mais usadas',
+    titulo: 'Linguagens mais utilizadas (incluindo repositórios privados)',
     outras: 'Outras',
     vazio: 'Nenhuma linguagem encontrada',
   },

@@ -1,170 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="480" height="222" viewBox="0 0 480 222" role="img"
-  aria-labelledby="titulo desc">
-  <title id="titulo">
-    Alguns dos repositórios públicos
-  </title>
-  <desc id="desc">
-    Alguns dos repositórios públicos: troo-x-video-downloader com 9 contribuições, arena-sp3-fix com 6
-    contribuições, transcriber com 6 contribuições, window-handle-explorer com 4 contribuições, cj17-gerenciador-tarefas
-    com 3 contribuições.
-  </desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="222" viewBox="0 0 480 222" role="img" aria-labelledby="titulo desc">
+  <title id="titulo">Alguns dos repositórios públicos</title>
+  <desc id="desc">Alguns dos repositórios públicos: troo-x-video-downloader com 9 contribuições, arena-sp3-fix com 6 contribuições, transcriber com 6 contribuições, window-handle-explorer com 4 contribuições, cj17-gerenciador-tarefas com 3 contribuições.</desc>
   <style>
-    svg {
-      --fundo: #0d1117;
-      --superficie: #161b22;
-      --borda: #30363d;
-      --texto: #e6edf3;
-      --textofraco: #8b949e;
-      --destaque: #2f81f7;
-      --chama: #f0883e;
-      --sucesso: #3fb950;
-    }
-
+    svg { --fundo: #0d1117; --superficie: #161b22; --borda: #30363d; --texto: #e6edf3; --textofraco: #8b949e; --destaque: #2f81f7; --chama: #f0883e; --sucesso: #3fb950; }
     @media (prefers-color-scheme: light) {
-      svg {
-        --fundo: #ffffff;
-        --superficie: #f6f8fa;
-        --borda: #d1d9e0;
-        --texto: #1f2328;
-        --textofraco: #59636e;
-        --destaque: #0969da;
-        --chama: #bc4c00;
-        --sucesso: #1a7f37;
-      }
+      svg { --fundo: #ffffff; --superficie: #f6f8fa; --borda: #d1d9e0; --texto: #1f2328; --textofraco: #59636e; --destaque: #0969da; --chama: #bc4c00; --sucesso: #1a7f37; }
     }
 
-    text {
-      font-family: 'Segoe UI', Ubuntu, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    .titulo {
-      font-size: 15px;
-      font-weight: 600;
-      fill: var(--texto);
-    }
-
-    .numero {
-      font-size: 26px;
-      font-weight: 700;
-      fill: var(--texto);
-    }
-
-    .numero-mini {
-      font-size: 13px;
-      font-weight: 600;
-      fill: var(--texto);
-    }
-
-    .rotulo {
-      font-size: 12px;
-      font-weight: 600;
-      fill: var(--texto);
-    }
-
-    .legenda {
-      font-size: 11px;
-      font-weight: 400;
-      fill: var(--textofraco);
-    }
-
-    .item {
-      font-size: 12px;
-      font-weight: 400;
-      fill: var(--texto);
-    }
+    text { font-family: 'Segoe UI', Ubuntu, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; }
+    .titulo      { font-size: 15px; font-weight: 600; fill: var(--texto); }
+    .numero      { font-size: 26px; font-weight: 700; fill: var(--texto); }
+    .numero-mini { font-size: 13px; font-weight: 600; fill: var(--texto); }
+    .rotulo      { font-size: 12px; font-weight: 600; fill: var(--texto); }
+    .legenda     { font-size: 11px; font-weight: 400; fill: var(--textofraco); }
+    .item        { font-size: 12px; font-weight: 400; fill: var(--texto); }
 
     @keyframes surgir {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
-
     @keyframes crescer {
-      from {
-        transform: scaleX(0);
-      }
-
-      to {
-        transform: scaleX(1);
-      }
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
     }
 
-    .anim {
-      animation: surgir 0.45s ease-out backwards;
-    }
+    /*
+     * "backwards" (e nao "forwards") e deliberado: o estado padrao do elemento
+     * e visivel, e o fade so e aplicado enquanto a animacao roda. Assim, num
+     * renderizador que ignore animacoes, o card aparece montado em vez de vazio.
+     * A animacao tambem nao toca em transform, que em SVG sobrescreveria o
+     * atributo transform de posicionamento do elemento.
+     */
+    .anim   { animation: surgir 0.45s ease-out backwards; }
+    .cresce { transform-origin: left center; animation: crescer 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
 
-    .cresce {
-      transform-origin: left center;
-      animation: crescer 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-    }
-
+    /* Quem pediu menos movimento vê o card já montado, sem animação. */
     @media (prefers-reduced-motion: reduce) {
-
-      .anim,
-      .cresce {
-        animation: none;
-      }
+      .anim, .cresce { animation: none; }
     }
+
   </style>
-  <rect x="0.5" y="0.5" width="479" height="221" rx="8" fill="var(--fundo)" stroke="var(--borda)" />
-  <text class="titulo anim" style="animation-delay: 0.10s" x="20" y="34">Alguns dos repositórios públicos</text>
-  <g class="anim" style="animation-delay: 0.25s">
-    <circle cx="24" cy="60" r="4.5" fill="#f1e05a" />
-    <text class="item" x="37" y="64">troo-x-video-downloader</text>
-    <text class="legenda" x="460" y="64" text-anchor="end">JavaScript · 9 commits</text>
-    <g transform="translate(37 71)">
-      <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)" />
-      <g class="cresce" style="animation-delay: 0.30s">
-        <rect x="0" y="0" width="423.00" height="4" rx="2" fill="#f1e05a" />
+  <rect x="0.5" y="0.5" width="479" height="221" rx="8" fill="var(--fundo)" stroke="var(--borda)"/>
+    <text class="titulo anim" style="animation-delay: 0.10s" x="20" y="34">Alguns dos repositórios públicos</text>
+    <g class="anim" style="animation-delay: 0.25s">
+      <circle cx="24" cy="60" r="4.5" fill="#f1e05a"/>
+      <text class="item" x="37" y="64">troo-x-video-downloader</text>
+      <text class="legenda" x="460" y="64" text-anchor="end">JavaScript · 9 commits</text>
+      <g transform="translate(37 71)">
+        <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
+        <g class="cresce" style="animation-delay: 0.30s">
+          <rect x="0" y="0" width="423.00" height="4" rx="2" fill="#f1e05a"/>
+        </g>
       </g>
     </g>
-  </g>
-  <g class="anim" style="animation-delay: 0.33s">
-    <circle cx="24" cy="92" r="4.5" fill="#3572A5" />
-    <text class="item" x="37" y="96">arena-sp3-fix</text>
-    <text class="legenda" x="460" y="96" text-anchor="end">Python · 6 commits</text>
-    <g transform="translate(37 103)">
-      <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)" />
-      <g class="cresce" style="animation-delay: 0.38s">
-        <rect x="0" y="0" width="282.00" height="4" rx="2" fill="#3572A5" />
+    <g class="anim" style="animation-delay: 0.33s">
+      <circle cx="24" cy="92" r="4.5" fill="#3572A5"/>
+      <text class="item" x="37" y="96">arena-sp3-fix</text>
+      <text class="legenda" x="460" y="96" text-anchor="end">Python · 6 commits</text>
+      <g transform="translate(37 103)">
+        <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
+        <g class="cresce" style="animation-delay: 0.38s">
+          <rect x="0" y="0" width="282.00" height="4" rx="2" fill="#3572A5"/>
+        </g>
       </g>
     </g>
-  </g>
-  <g class="anim" style="animation-delay: 0.41s">
-    <circle cx="24" cy="124" r="4.5" fill="#3572A5" />
-    <text class="item" x="37" y="128">transcriber</text>
-    <text class="legenda" x="460" y="128" text-anchor="end">Python · 6 commits</text>
-    <g transform="translate(37 135)">
-      <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)" />
-      <g class="cresce" style="animation-delay: 0.46s">
-        <rect x="0" y="0" width="282.00" height="4" rx="2" fill="#3572A5" />
+    <g class="anim" style="animation-delay: 0.41s">
+      <circle cx="24" cy="124" r="4.5" fill="#3572A5"/>
+      <text class="item" x="37" y="128">transcriber</text>
+      <text class="legenda" x="460" y="128" text-anchor="end">Python · 6 commits</text>
+      <g transform="translate(37 135)">
+        <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
+        <g class="cresce" style="animation-delay: 0.46s">
+          <rect x="0" y="0" width="282.00" height="4" rx="2" fill="#3572A5"/>
+        </g>
       </g>
     </g>
-  </g>
-  <g class="anim" style="animation-delay: 0.49s">
-    <circle cx="24" cy="156" r="4.5" fill="#f34b7d" />
-    <text class="item" x="37" y="160">window-handle-explorer</text>
-    <text class="legenda" x="460" y="160" text-anchor="end">C++ · 4 commits</text>
-    <g transform="translate(37 167)">
-      <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)" />
-      <g class="cresce" style="animation-delay: 0.54s">
-        <rect x="0" y="0" width="188.00" height="4" rx="2" fill="#f34b7d" />
+    <g class="anim" style="animation-delay: 0.49s">
+      <circle cx="24" cy="156" r="4.5" fill="#f34b7d"/>
+      <text class="item" x="37" y="160">window-handle-explorer</text>
+      <text class="legenda" x="460" y="160" text-anchor="end">C++ · 4 commits</text>
+      <g transform="translate(37 167)">
+        <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
+        <g class="cresce" style="animation-delay: 0.54s">
+          <rect x="0" y="0" width="188.00" height="4" rx="2" fill="#f34b7d"/>
+        </g>
       </g>
     </g>
-  </g>
-  <g class="anim" style="animation-delay: 0.57s">
-    <circle cx="24" cy="188" r="4.5" fill="#b07219" />
-    <text class="item" x="37" y="192">cj17-gerenciador-tarefas</text>
-    <text class="legenda" x="460" y="192" text-anchor="end">Java · 3 commits</text>
-    <g transform="translate(37 199)">
-      <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)" />
-      <g class="cresce" style="animation-delay: 0.62s">
-        <rect x="0" y="0" width="141.00" height="4" rx="2" fill="#b07219" />
+    <g class="anim" style="animation-delay: 0.57s">
+      <circle cx="24" cy="188" r="4.5" fill="#b07219"/>
+      <text class="item" x="37" y="192">cj17-gerenciador-tarefas</text>
+      <text class="legenda" x="460" y="192" text-anchor="end">Java · 3 commits</text>
+      <g transform="translate(37 199)">
+        <rect x="0" y="0" width="423" height="4" rx="2" fill="var(--superficie)"/>
+        <g class="cresce" style="animation-delay: 0.62s">
+          <rect x="0" y="0" width="141.00" height="4" rx="2" fill="#b07219"/>
+        </g>
       </g>
     </g>
-  </g>
 </svg>
