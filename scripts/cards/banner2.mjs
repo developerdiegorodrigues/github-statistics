@@ -79,7 +79,7 @@ const BRILHO_R = n(Math.hypot(BRILHO_W / 2, BRILHO_H / 2));
 const VINHETA_CY = n(ALTURA_CAPA / 2);
 const VINHETA_R = n(Math.hypot(LARGURA / 2, ALTURA_CAPA / 2));
 
-const AVATAR = 'assets/avatar2_x300.webp';
+const AVATAR = 'assets/avatar2a_x300.webp';
 
 /*
  * Geometria do avatar. O original do app usava anel de raio 100 e foto de 180px;
