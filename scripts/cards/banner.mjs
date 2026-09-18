@@ -79,6 +79,9 @@ const DEFS = `  <defs>
   </defs>
 `;
 
+/** Consumido pelo validar.mjs, para as dimensões não serem repetidas lá. */
+export const DIMENSOES = { largura: LARGURA, altura: ALTURA };
+
 export default function renderizar() {
   const t = textos.banner;
   const avatar = embutir(AVATAR);

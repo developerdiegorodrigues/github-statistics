@@ -9,6 +9,8 @@
 import { readFileSync } from 'node:fs';
 import { LARGURA } from './tema.mjs';
 import { textos } from './i18n.mjs';
+import { DIMENSOES as BANNER } from './cards/banner.mjs';
+import { DIMENSOES as BANNER_2 } from './cards/banner2.mjs';
 
 const TAMANHO_MAXIMO = 100 * 1024;
 const ALTURA_MINIMA = 80;
@@ -37,14 +39,12 @@ const PADROES_PROIBIDOS = [
 const ESPERADO = {
   // O banner é o único que foge dos 480px: ocupa 100% da largura do README.
   'banner.svg': {
-    largura: 1200,
-    altura: 300,
+    ...BANNER,
     marcadores: [textos.banner.nome, textos.banner.papel, 'data:image/webp;base64,'],
   },
   // Sem texto: os marcadores provam o avatar embutido e a estrutura do padrão.
   'banner_2.svg': {
-    largura: 600,
-    altura: 270,
+    ...BANNER_2,
     marcadores: ['data:image/webp;base64,', 'nl-profile-banner-mesh', 'nl-profile-banner-avatar-clip'],
   },
   'contribuicoes.svg': { marcadores: [textos.contribuicoes.total, /\d/], dados: 'contribuicoes.json' },
@@ -119,8 +119,11 @@ function validar(arquivo, regras) {
 
   // 2. Dimensões — os cards de estatística compartilham a largura para
   //    alinharem entre si; quem tem dimensão própria declara em ESPERADO.
-  const largura = Number(svg.match(/\bwidth="(\d+)"/)?.[1]);
-  const altura = Number(svg.match(/\bheight="(\d+)"/)?.[1]);
+  // Lê da tag <svg> raiz: buscar no documento inteiro pegava o width/height
+  // de um <image> ou <rect> interno, e aceitava decimais mal.
+  const raiz = svg.match(/<svg\b[^>]*>/)?.[0] ?? '';
+  const largura = Number(raiz.match(/\bwidth="([\d.]+)"/)?.[1]);
+  const altura = Number(raiz.match(/\bheight="([\d.]+)"/)?.[1]);
   const larguraEsperada = regras.largura ?? LARGURA;
   if (largura !== larguraEsperada) {
     erros.push(`largura ${largura} ≠ ${larguraEsperada}`);

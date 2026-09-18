@@ -18,6 +18,13 @@
  * (9.6 à esquerda, 14.4 à direita, espelhando o raio de cada lado) e a entrada
  * do avatar passou a ser o flip-in-ver-right do Animista.
  *
+ * O grupo `.nl-profile-banner__avatar` (anel + foto) anima com opacity:0
+ * durante o atraso da entrada — nesse intervalo, sem nada mais desenhado ali,
+ * a área do avatar fica transparente e revela o fundo da página por trás
+ * (o "buraco" visível ao carregar o README). Por isso há um círculo estático,
+ * fora do grupo animado, do tamanho do anel e na cor da capa: ele preenche
+ * esse vão desde o primeiro frame, e o anel + a foto entram por cima dele.
+ *
  * Este é o único SVG do projeto que não passa pelo card() do tema: ele carrega
  * o sistema visual do app (tokens nl-*, paleta própria), e convertê-lo para os
  * tokens daqui descaracterizaria o que se pediu para preservar. Por isso também
@@ -26,7 +33,6 @@
 import { embutir } from '../imagem.mjs';
 
 const LARGURA = 600;
-const ALTURA = 270;
 
 /*
  * Arredonda para 4 casas. As medidas derivam de fatores percentuais
@@ -84,16 +90,30 @@ const ESCALA = 0.6;
 /** Cor do anel do avatar. */
 const COR_ANEL = '#0d1117';
 /*
- * Tom escuro do padrão de fundo (brilho, vinheta e malha). No app era #202020;
- * aqui usa o fundo escuro do GitHub, para o banner se fundir com a página.
+ * Os três tons escuros do fundo. No app era tudo #202020 sobre base #101010;
+ * aqui foram separados porque cumprem papéis diferentes — o gradiente precisa
+ * de um tom levemente acima da base para o brilho ter contraste, enquanto a
+ * malha usa o mesmo tom do fundo do GitHub para o banner se fundir à página.
  */
-const COR_PADRAO = '#0d1117';
+const COR_CAPA = '#0d1117';
+const COR_GRADIENTE = '#151515';
+const COR_MALHA = '#0d1117';
 const AVATAR_CX = LARGURA / 2;
 /** O centro fica 5 abaixo da borda da capa, como no original (150 -> 155). */
 const AVATAR_CY = n(ALTURA_CAPA + 5);
 const ANEL_R = 100 * ESCALA;
 const FOTO_R = 90 * ESCALA;
 const FOTO_D = FOTO_R * 2;
+
+/*
+ * Altura total do SVG. Derivada do ponto mais baixo do avatar mais a margem
+ * de respiro abaixo dele. Era 15 (a mesma proporção do original: 270 - 255);
+ * reduzida para 10 a pedido, cortando mais um pouco do vazio remanescente.
+ * Enquanto a altura era fixa em 270, cada redução da capa aumentava esse
+ * vazio — chegou a 44% da altura antes de a altura passar a ser derivada.
+ */
+const MARGEM_INFERIOR = 5;
+const ALTURA = Math.round(AVATAR_CY + ANEL_R + MARGEM_INFERIOR);
 
 /*
  * Escala da malha hexagonal do fundo.
@@ -120,6 +140,7 @@ const CSS = `
         --nl-smart-termite-shift-duration: 80s;
         --nl-smart-termite-filter-duration: 12s;
         --nl-profile-banner-avatar-duration: 500ms;
+        --nl-profile-banner-avatar-delay: 0.5s;
       }
 
       .nl-profile-banner__accent-stop { stop-color: var(--nl-profile-banner-accent); }
@@ -144,7 +165,8 @@ const CSS = `
         transform-box: view-box;
         transform-origin: ${AVATAR_CX}px ${AVATAR_CY}px;
         animation: nl-profile-banner-avatar-in var(--nl-profile-banner-avatar-duration)
-          cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          cubic-bezier(0.250, 0.460, 0.450, 0.940)
+          var(--nl-profile-banner-avatar-delay) both;
       }
 
       @keyframes nl-profile-banner-glow-x {
@@ -177,6 +199,9 @@ const CSS = `
       }
 `;
 
+/** Consumido pelo validar.mjs, para as dimensões não serem repetidas lá. */
+export const DIMENSOES = { largura: LARGURA, altura: ALTURA };
+
 export default function renderizar() {
   const avatar = embutir(AVATAR);
 
@@ -196,8 +221,8 @@ export default function renderizar() {
 
     <radialGradient id="nl-profile-banner-glow-gradient" gradientUnits="userSpaceOnUse" cx="${n(BRILHO_W / 2)}" cy="${n(BRILHO_H / 2)}" r="${BRILHO_R}">
       <stop offset="0" class="nl-profile-banner__accent-stop" stop-color="#B14914"/>
-      <stop offset="0.6" stop-color="${COR_PADRAO}"/>
-      <stop offset="1" stop-color="${COR_PADRAO}"/>
+      <stop offset="0.6" stop-color="${COR_GRADIENTE}"/>
+      <stop offset="1" stop-color="${COR_GRADIENTE}"/>
     </radialGradient>
 
     <pattern id="nl-profile-banner-glow" patternUnits="userSpaceOnUse" width="${BRILHO_W}" height="${BRILHO_H}">
@@ -205,14 +230,14 @@ export default function renderizar() {
     </pattern>
 
     <radialGradient id="nl-profile-banner-vignette" gradientUnits="userSpaceOnUse" cx="${LARGURA / 2}" cy="${VINHETA_CY}" r="${VINHETA_R}">
-      <stop offset="0" stop-color="${COR_PADRAO}" stop-opacity="0"/>
-      <stop offset="0.3" stop-color="${COR_PADRAO}" stop-opacity="0"/>
-      <stop offset="0.9" stop-color="${COR_PADRAO}" stop-opacity="1"/>
-      <stop offset="1" stop-color="${COR_PADRAO}" stop-opacity="1"/>
+      <stop offset="0" stop-color="${COR_GRADIENTE}" stop-opacity="0"/>
+      <stop offset="0.3" stop-color="${COR_GRADIENTE}" stop-opacity="0"/>
+      <stop offset="0.9" stop-color="${COR_GRADIENTE}" stop-opacity="1"/>
+      <stop offset="1" stop-color="${COR_GRADIENTE}" stop-opacity="1"/>
     </radialGradient>
 
     <pattern id="nl-profile-banner-mesh" patternUnits="userSpaceOnUse" width="${MALHA_W}" height="${MALHA_H}">
-      <g fill="none" stroke="${COR_PADRAO}" stroke-width="${MALHA_TRACO}">
+      <g fill="none" stroke="${COR_MALHA}" stroke-width="${MALHA_TRACO}">
         <circle cx="${n(MALHA_W / 2)}" cy="${n(MALHA_H / 2)}" r="${MALHA_R}"/>
         <circle cx="0" cy="0" r="${MALHA_R}"/>
         <circle cx="${MALHA_W}" cy="0" r="${MALHA_R}"/>
@@ -223,7 +248,7 @@ export default function renderizar() {
   </defs>
 
   <g clip-path="url(#nl-profile-banner-cover-clip)">
-    <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="#101010"/>
+    <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="${COR_CAPA}"/>
 
     <g class="nl-profile-banner__glow-hue">
       <g class="nl-profile-banner__glow-x">
@@ -236,6 +261,8 @@ export default function renderizar() {
     <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="url(#nl-profile-banner-vignette)"/>
     <rect width="${LARGURA}" height="${ALTURA_CAPA}" fill="url(#nl-profile-banner-mesh)"/>
   </g>
+
+  <circle cx="${AVATAR_CX}" cy="${AVATAR_CY}" r="${ANEL_R}" fill="${COR_CAPA}"/>
 
   <g class="nl-profile-banner__avatar">
     <circle class="nl-profile-banner__ring" cx="${AVATAR_CX}" cy="${AVATAR_CY}" r="${ANEL_R}" fill="${COR_ANEL}"/>
