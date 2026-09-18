@@ -7,11 +7,16 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { carimbo } from './i18n.mjs';
 
+import banner from './cards/banner.mjs';
+import banner2 from './cards/banner2.mjs';
 import contribuicoes from './cards/contribuicoes.mjs';
 import linguagens from './cards/linguagens.mjs';
 import repositorios from './cards/repositorios.mjs';
 
 const CARDS = [
+  // O banner é estático: não tem arquivo de dados, por isso `dados: null`.
+  { dados: null, svg: 'banner.svg', renderizar: banner },
+  { dados: null, svg: 'Banner_2.svg', renderizar: banner2 },
   { dados: 'contribuicoes.json', svg: 'contribuicoes.svg', renderizar: contribuicoes },
   { dados: 'linguagens.json', svg: 'linguagens.svg', renderizar: linguagens },
   { dados: 'repositorios.json', svg: 'repositorios.svg', renderizar: repositorios },
@@ -29,7 +34,7 @@ let falhas = 0;
 
 for (const c of CARDS) {
   try {
-    const svg = c.renderizar(ler(c.dados));
+    const svg = c.renderizar(c.dados ? ler(c.dados) : undefined);
     writeFileSync(`svg/${c.svg}`, svg);
     console.log(`  ✓ svg/${c.svg} (${svg.length} bytes)`);
   } catch (e) {

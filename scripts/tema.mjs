@@ -76,6 +76,22 @@ const CSS_BASE = `
     }
 `;
 
+/**
+ * Tira os comentários do CSS antes de escrever o SVG. Eles explicam decisões
+ * para quem mantém o código, e é no código que devem ficar: no arquivo
+ * publicado só ocupam bytes.
+ *
+ * Aplicado apenas ao bloco <style>, nunca ao documento inteiro — o alfabeto
+ * base64 de um data URI contém "/", e varrer o SVG todo arriscaria corromper
+ * uma imagem embutida.
+ */
+function semComentarios(css) {
+  return css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/[ \t]+$/gm, '')
+    .replace(/\n{3,}/g, '\n\n');
+}
+
 /** Escapa texto para inserção segura em conteúdo XML. */
 export function esc(valor) {
   return String(valor)
@@ -124,14 +140,27 @@ export function atraso(indice, base = 0.1, passo = 0.08) {
 /**
  * Monta o SVG completo. Todo card passa por aqui, o que garante mesmas
  * dimensões, mesma borda, mesma acessibilidade e mesmo CSS.
+ *
+ * `largura` existe para o banner, que é o único a fugir dos 480px dos cards
+ * de estatística. `defs` entra antes do fundo, para gradientes e clipPaths.
  */
-export function card({ altura, titulo, descricao, conteudo, cssExtra = '' }) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${LARGURA}" height="${altura}" viewBox="0 0 ${LARGURA} ${altura}" role="img" aria-labelledby="titulo desc">
+export function card({
+  largura = LARGURA,
+  altura,
+  raio = 8,
+  titulo,
+  descricao,
+  conteudo,
+  cssExtra = '',
+  defs = '',
+  fundo = 'var(--fundo)',
+}) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${largura}" height="${altura}" viewBox="0 0 ${largura} ${altura}" role="img" aria-labelledby="titulo desc">
   <title id="titulo">${esc(titulo)}</title>
   <desc id="desc">${esc(descricao)}</desc>
-  <style>${CSS_BASE}${cssExtra}
+  <style>${semComentarios(CSS_BASE + cssExtra)}
   </style>
-  <rect x="0.5" y="0.5" width="${LARGURA - 1}" height="${altura - 1}" rx="8" fill="var(--fundo)" stroke="var(--borda)"/>
+${defs}  <rect x="0.5" y="0.5" width="${largura - 1}" height="${altura - 1}" rx="${raio}" fill="${fundo}" stroke="var(--borda)"/>
 ${conteudo}
 </svg>
 `;

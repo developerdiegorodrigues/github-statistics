@@ -35,6 +35,18 @@ const PADROES_PROIBIDOS = [
  * Strings são comparadas literalmente; regex, por padrão.
  */
 const ESPERADO = {
+  // O banner é o único que foge dos 480px: ocupa 100% da largura do README.
+  'banner.svg': {
+    largura: 1200,
+    altura: 300,
+    marcadores: [textos.banner.nome, textos.banner.papel, 'data:image/webp;base64,'],
+  },
+  // Sem texto: os marcadores provam o avatar embutido e a estrutura do padrão.
+  'Banner_2.svg': {
+    largura: 600,
+    altura: 270,
+    marcadores: ['data:image/webp;base64,', 'nl-profile-banner-mesh', 'nl-profile-banner-avatar-clip'],
+  },
   'contribuicoes.svg': { marcadores: [textos.contribuicoes.total, /\d/], dados: 'contribuicoes.json' },
   'linguagens.svg': { marcadores: [textos.linguagens.titulo, /%/, /\d/], dados: 'linguagens.json' },
   'repositorios.svg': { marcadores: [textos.repositorios.titulo, /commit/, /\d/], dados: 'repositorios.json' },
@@ -105,11 +117,17 @@ function validar(arquivo, regras) {
     erros.push(`XML mal formado: ${e.message}`);
   }
 
-  // 2. Dimensões
+  // 2. Dimensões — os cards de estatística compartilham a largura para
+  //    alinharem entre si; quem tem dimensão própria declara em ESPERADO.
   const largura = Number(svg.match(/\bwidth="(\d+)"/)?.[1]);
   const altura = Number(svg.match(/\bheight="(\d+)"/)?.[1]);
-  if (largura !== LARGURA) erros.push(`largura ${largura} ≠ ${LARGURA} (cards precisam alinhar entre si)`);
-  if (!(altura >= ALTURA_MINIMA && altura <= ALTURA_MAXIMA)) {
+  const larguraEsperada = regras.largura ?? LARGURA;
+  if (largura !== larguraEsperada) {
+    erros.push(`largura ${largura} ≠ ${larguraEsperada}`);
+  }
+  if (regras.altura !== undefined) {
+    if (altura !== regras.altura) erros.push(`altura ${altura} ≠ ${regras.altura}`);
+  } else if (!(altura >= ALTURA_MINIMA && altura <= ALTURA_MAXIMA)) {
     erros.push(`altura ${altura} fora de [${ALTURA_MINIMA}, ${ALTURA_MAXIMA}]`);
   }
 
@@ -134,7 +152,14 @@ function validar(arquivo, regras) {
     if (!NAMESPACES.includes(url)) erros.push(`URL externa proibida: ${url}`);
   }
 
-  return { erros, bytes, altura };
+  // 6b. Imagem referenciada de fora nunca renderiza: SVG carregado via <img>
+  //     roda em modo estático seguro e o navegador bloqueia recurso externo.
+  //     Toda imagem tem de estar embutida como data URI.
+  for (const ref of svg.match(/<image[^>]*\shref="([^"]{0,40})/g) || []) {
+    if (!ref.includes('href="data:')) erros.push(`<image> com href não embutido: ${ref.slice(-40)}…`);
+  }
+
+  return { erros, bytes, largura, altura };
 }
 
 /** Nenhum nome de repositório privado pode chegar a um card público. */
@@ -168,7 +193,7 @@ for (const [arquivo, regras] of Object.entries(ESPERADO)) {
     for (const erro of resultado.erros) console.error(`      · ${erro}`);
     falhas++;
   } else {
-    console.log(`  ✓ svg/${arquivo} (${resultado.bytes} bytes, ${LARGURA}×${resultado.altura})`);
+    console.log(`  ✓ svg/${arquivo} (${resultado.bytes} bytes, ${resultado.largura}×${resultado.altura})`);
   }
 }
 

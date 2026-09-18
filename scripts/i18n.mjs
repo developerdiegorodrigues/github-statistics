@@ -5,6 +5,12 @@
 import { config } from './config.mjs';
 
 export const textos = {
+  banner: {
+    nome: 'Diego Rodrigues',
+    papel: 'Desenvolvedor Full Stack',
+    stacks: 'Java · Spring · TypeScript · AWS · Kubernetes',
+    alt: (nome) => `Banner do perfil de ${nome}`,
+  },
   contribuicoes: {
     titulo: 'Contribuições no GitHub',
     total: 'Contribuições',

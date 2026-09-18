@@ -24,17 +24,9 @@
       to   { transform: scaleX(1); }
     }
 
-    /*
-     * "backwards" (e nao "forwards") e deliberado: o estado padrao do elemento
-     * e visivel, e o fade so e aplicado enquanto a animacao roda. Assim, num
-     * renderizador que ignore animacoes, o card aparece montado em vez de vazio.
-     * A animacao tambem nao toca em transform, que em SVG sobrescreveria o
-     * atributo transform de posicionamento do elemento.
-     */
     .anim   { animation: surgir 0.45s ease-out backwards; }
     .cresce { transform-origin: left center; animation: crescer 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
 
-    /* Quem pediu menos movimento vê o card já montado, sem animação. */
     @media (prefers-reduced-motion: reduce) {
       .anim, .cresce { animation: none; }
     }

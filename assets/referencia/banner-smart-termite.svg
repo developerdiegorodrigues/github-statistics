@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Banner de perfil : padrao "smart-termite" em SVG autocontido.
+
+  Extraido de <nl-background-pattern [patterns]="['smart-termite']" /> combinado com
+  .nl-profile-cover e .nl-profile-avatar (src/styles/Global.css). Mesma geometria em px do app
+  (root 16px): capa 600x150 com cantos inferiores 14.4/9.6, avatar de 200px com anel de 10px
+  centrado em (300,155).
+
+  Customizacao pelas custom properties declaradas em .nl-profile-banner no <style> abaixo
+  (tambem sobrescreviveis pelo consumidor quando o SVG e inlinado no documento):
+    nl-profile-banner-accent        cor do brilho, equivalente ao token color-primary-700
+    nl-profile-banner-avatar-ring   cor do anel do avatar, token color-background-300
+    nl-smart-termite-shift-duration    deslocamento do brilho (80s no app)
+    nl-smart-termite-filter-duration   giro de matiz (12s no app)
+    nl-profile-banner-avatar-duration  entrada do avatar por rotacao
+
+  A foto e o <image id="nl-profile-banner-avatar">: trocar href e xlink:href pela URL do avatar.
+  Atencao: o navegador nao carrega recurso externo quando o SVG e usado como <img src>; nesse
+  caso o href precisa ser um data: URI. Inlinado no HTML, ou via <object>/<embed>, a URL externa
+  funciona normalmente.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     class="nl-profile-banner" width="600" height="270" viewBox="0 0 600 270"
+     role="img" aria-label="Banner de perfil">
+  <title>Banner de perfil</title>
+
+  <defs>
+    <style>
+      .nl-profile-banner {
+        --nl-profile-banner-accent: #B14914;
+        --nl-profile-banner-avatar-ring: #3d3d3d;
+        --nl-smart-termite-shift-duration: 80s;
+        --nl-smart-termite-filter-duration: 12s;
+        --nl-profile-banner-avatar-duration: 900ms;
+      }
+
+      /* var() dentro de atributo de apresentacao nao e resolvido por todos os motores, entao as
+         cores customizaveis entram por regra CSS e o atributo fica como fallback. */
+      .nl-profile-banner__accent-stop { stop-color: var(--nl-profile-banner-accent); }
+      .nl-profile-banner__ring { fill: var(--nl-profile-banner-avatar-ring); }
+
+      /* O brilho percorre 5 larguras e 2 alturas de ladrilho por ciclo (background-position indo
+         de 1000% / -400% ate 0% no CSS original). Como o ladrilho se repete, animar cada eixo por
+         um unico ladrilho reproduz o mesmo movimento desenhando so quatro quadrantes. */
+      .nl-profile-banner__glow-x {
+        animation: nl-profile-banner-glow-x linear infinite;
+        animation-duration: calc(var(--nl-smart-termite-shift-duration) / 5);
+      }
+
+      .nl-profile-banner__glow-y {
+        animation: nl-profile-banner-glow-y linear infinite;
+        animation-duration: calc(var(--nl-smart-termite-shift-duration) / 2);
+      }
+
+      /* Equivale ao filter do elemento inteiro no CSS: cinza puro e invariante a hue-rotate,
+         entao aplicar so na camada colorida da o mesmo resultado. */
+      .nl-profile-banner__glow-hue {
+        animation: nl-profile-banner-hue linear infinite;
+        animation-duration: var(--nl-smart-termite-filter-duration);
+      }
+
+      .nl-profile-banner__avatar {
+        transform-box: view-box;
+        transform-origin: 300px 155px;
+        animation: nl-profile-banner-avatar-in var(--nl-profile-banner-avatar-duration)
+          cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @keyframes nl-profile-banner-glow-x {
+        from { transform: translateX(0); }
+        to   { transform: translateX(1200px); }
+      }
+
+      @keyframes nl-profile-banner-glow-y {
+        from { transform: translateY(0); }
+        to   { transform: translateY(-300px); }
+      }
+
+      @keyframes nl-profile-banner-hue {
+        from { filter: hue-rotate(0deg); }
+        to   { filter: hue-rotate(360deg); }
+      }
+
+      @keyframes nl-profile-banner-avatar-in {
+        from { opacity: 0; transform: rotate(-180deg) scale(0.5); }
+        to   { opacity: 1; transform: rotate(0deg) scale(1); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .nl-profile-banner__glow-x,
+        .nl-profile-banner__glow-y,
+        .nl-profile-banner__glow-hue,
+        .nl-profile-banner__avatar {
+          animation: none;
+        }
+      }
+    </style>
+
+    <!-- Capa com border-radius 0 0 14.4px 9.6px -->
+    <clipPath id="nl-profile-banner-cover-clip">
+      <path d="M0 0 H600 V135.6 A14.4 14.4 0 0 1 585.6 150 H9.6 A9.6 9.6 0 0 1 0 140.4 Z" />
+    </clipPath>
+
+    <clipPath id="nl-profile-banner-avatar-clip">
+      <circle cx="300" cy="155" r="90" />
+    </clipPath>
+
+    <!-- Brilho: circulo do token primary-700 ate #202020 em 60%, num ladrilho de 200% x 200%
+         da capa; o raio e a distancia ate o canto mais distante do ladrilho. -->
+    <radialGradient id="nl-profile-banner-glow-gradient"
+                    gradientUnits="userSpaceOnUse" cx="600" cy="150" r="618.4658">
+      <stop offset="0" class="nl-profile-banner__accent-stop" stop-color="#B14914" />
+      <stop offset="0.6" stop-color="#202020" />
+      <stop offset="1" stop-color="#202020" />
+    </radialGradient>
+
+    <pattern id="nl-profile-banner-glow" patternUnits="userSpaceOnUse" width="1200" height="300">
+      <rect width="1200" height="300" fill="url(#nl-profile-banner-glow-gradient)" />
+    </pattern>
+
+    <!-- Vinheta: transparente ate 30% e #202020 a partir de 90%, no tamanho exato da capa. -->
+    <radialGradient id="nl-profile-banner-vignette"
+                    gradientUnits="userSpaceOnUse" cx="300" cy="75" r="309.2329">
+      <stop offset="0" stop-color="#202020" stop-opacity="0" />
+      <stop offset="0.3" stop-color="#202020" stop-opacity="0" />
+      <stop offset="0.9" stop-color="#202020" stop-opacity="1" />
+      <stop offset="1" stop-color="#202020" stop-opacity="1" />
+    </radialGradient>
+
+    <!-- As duas camadas de gradiente defasadas em (6, 10.392) formam uma malha hexagonal de
+         aneis com passo de 12px; aqui viram um ladrilho unico com centro mais quatro cantos. -->
+    <pattern id="nl-profile-banner-mesh" patternUnits="userSpaceOnUse"
+             width="12" height="20.7846097">
+      <g fill="none" stroke="#202020" stroke-width="1">
+        <circle cx="6" cy="10.3923049" r="5.5" />
+        <circle cx="0" cy="0" r="5.5" />
+        <circle cx="12" cy="0" r="5.5" />
+        <circle cx="0" cy="20.7846097" r="5.5" />
+        <circle cx="12" cy="20.7846097" r="5.5" />
+      </g>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#nl-profile-banner-cover-clip)">
+    <rect width="600" height="150" fill="#101010" />
+
+    <g class="nl-profile-banner__glow-hue">
+      <g class="nl-profile-banner__glow-x">
+        <g class="nl-profile-banner__glow-y">
+          <rect x="-1200" y="-300" width="2400" height="900"
+                fill="url(#nl-profile-banner-glow)" />
+        </g>
+      </g>
+    </g>
+
+    <rect width="600" height="150" fill="url(#nl-profile-banner-vignette)" />
+    <rect width="600" height="150" fill="url(#nl-profile-banner-mesh)" />
+  </g>
+
+  <g class="nl-profile-banner__avatar">
+    <circle class="nl-profile-banner__ring" cx="300" cy="155" r="100" fill="#3d3d3d" />
+    <image id="nl-profile-banner-avatar"
+           x="210" y="65" width="180" height="180"
+           preserveAspectRatio="xMidYMid slice"
+           clip-path="url(#nl-profile-banner-avatar-clip)"
+           href="/assets/avatar/avatar_1_x500.webp"
+           xlink:href="/assets/avatar/avatar_1_x500.webp" />
+  </g>
+</svg>
