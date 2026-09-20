@@ -1,17 +1,6 @@
 {
-  "geradoEm": "2026-09-20T06:02:26.794Z",
+  "geradoEm": "2026-09-20T18:02:13.434Z",
   "todos": [
-    {
-      "nome": "blender-codex-bridge",
-      "nomeCompleto": "developerdiegorodrigues/blender-codex-bridge",
-      "commits": 23,
-      "prs": 0,
-      "total": 23,
-      "estrelas": 1,
-      "privado": false,
-      "linguagem": "Python",
-      "cor": "#3572A5"
-    },
     {
       "nome": "transcriber",
       "nomeCompleto": "developerdiegorodrigues/transcriber",
