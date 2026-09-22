@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="182" viewBox="0 0 480 182" role="img" aria-labelledby="titulo desc">
   <title id="titulo">Linguagens mais utilizadas (incluindo repositórios privados)</title>
-  <desc id="desc">Linguagens mais utilizadas (incluindo repositórios privados): TypeScript 32,5%, Java 28,3%, Python 14,7%, HTML 12,6%, CSS 8,4%, C++ 1,4%, Outras 2,1%.</desc>
+  <desc id="desc">Linguagens mais utilizadas (incluindo repositórios privados): TypeScript 32,3%, Java 28,1%, Python 15,2%, HTML 12,6%, CSS 8,3%, C++ 1,4%, Outras 2,1%.</desc>
   <style>
     svg { --fundo: #0d1117; --superficie: #161b22; --borda: #30363d; --texto: #e6edf3; --textofraco: #8b949e; --destaque: #2f81f7; --chama: #f0883e; --sucesso: #3fb950; }
     @media (prefers-color-scheme: light) {
@@ -37,29 +37,29 @@
     <text class="titulo anim" style="animation-delay: 0.10s" x="20" y="34">Linguagens mais utilizadas (incluindo repositórios privados)</text>
     <g transform="translate(20 48)" clip-path="url(#recorte-barra)">
       <g class="cresce" style="animation-delay: 0.15s">
-      <rect x="0.00" y="0" width="142.91" height="12" fill="#3178c6"/>
-      <rect x="142.91" y="0" width="124.49" height="12" fill="#b07219"/>
-      <rect x="267.40" y="0" width="64.82" height="12" fill="#3572A5"/>
-      <rect x="332.22" y="0" width="55.62" height="12" fill="#e34c26"/>
-      <rect x="387.84" y="0" width="36.80" height="12" fill="#663399"/>
-      <rect x="424.64" y="0" width="6.03" height="12" fill="#f34b7d"/>
-      <rect x="430.67" y="0" width="9.33" height="12" fill="var(--textofraco)"/>
+      <rect x="0.00" y="0" width="142.07" height="12" fill="#3178c6"/>
+      <rect x="142.07" y="0" width="123.76" height="12" fill="#b07219"/>
+      <rect x="265.83" y="0" width="67.03" height="12" fill="#3572A5"/>
+      <rect x="332.86" y="0" width="55.29" height="12" fill="#e34c26"/>
+      <rect x="388.15" y="0" width="36.58" height="12" fill="#663399"/>
+      <rect x="424.73" y="0" width="6.00" height="12" fill="#f34b7d"/>
+      <rect x="430.73" y="0" width="9.27" height="12" fill="var(--textofraco)"/>
       </g>
     </g>
     <g class="anim" style="animation-delay: 0.35s">
       <circle cx="24" cy="84" r="4.5" fill="#3178c6"/>
       <text class="item" x="37" y="88">TypeScript</text>
-      <text class="legenda" x="216" y="88" text-anchor="end">32,5%</text>
+      <text class="legenda" x="216" y="88" text-anchor="end">32,3%</text>
     </g>
     <g class="anim" style="animation-delay: 0.41s">
       <circle cx="24" cy="108" r="4.5" fill="#b07219"/>
       <text class="item" x="37" y="112">Java</text>
-      <text class="legenda" x="216" y="112" text-anchor="end">28,3%</text>
+      <text class="legenda" x="216" y="112" text-anchor="end">28,1%</text>
     </g>
     <g class="anim" style="animation-delay: 0.47s">
       <circle cx="24" cy="132" r="4.5" fill="#3572A5"/>
       <text class="item" x="37" y="136">Python</text>
-      <text class="legenda" x="216" y="136" text-anchor="end">14,7%</text>
+      <text class="legenda" x="216" y="136" text-anchor="end">15,2%</text>
     </g>
     <g class="anim" style="animation-delay: 0.53s">
       <circle cx="24" cy="156" r="4.5" fill="#e34c26"/>
@@ -69,7 +69,7 @@
     <g class="anim" style="animation-delay: 0.59s">
       <circle cx="256" cy="84" r="4.5" fill="#663399"/>
       <text class="item" x="269" y="88">CSS</text>
-      <text class="legenda" x="448" y="88" text-anchor="end">8,4%</text>
+      <text class="legenda" x="448" y="88" text-anchor="end">8,3%</text>
     </g>
     <g class="anim" style="animation-delay: 0.65s">
       <circle cx="256" cy="108" r="4.5" fill="#f34b7d"/>
