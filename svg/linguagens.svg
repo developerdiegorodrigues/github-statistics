@@ -37,13 +37,13 @@
     <text class="titulo anim" style="animation-delay: 0.10s" x="20" y="34">Linguagens mais utilizadas (incluindo repositórios privados)</text>
     <g transform="translate(20 48)" clip-path="url(#recorte-barra)">
       <g class="cresce" style="animation-delay: 0.15s">
-      <rect x="0.00" y="0" width="140.59" height="12" fill="#3178c6"/>
-      <rect x="140.59" y="0" width="121.95" height="12" fill="#b07219"/>
-      <rect x="262.54" y="0" width="72.19" height="12" fill="#3572A5"/>
-      <rect x="334.73" y="0" width="54.29" height="12" fill="#e34c26"/>
-      <rect x="389.03" y="0" width="35.97" height="12" fill="#663399"/>
-      <rect x="425.00" y="0" width="5.88" height="12" fill="#f34b7d"/>
-      <rect x="430.88" y="0" width="9.12" height="12" fill="var(--textofraco)"/>
+      <rect x="0.00" y="0" width="140.83" height="12" fill="#3178c6"/>
+      <rect x="140.83" y="0" width="121.84" height="12" fill="#b07219"/>
+      <rect x="262.67" y="0" width="72.13" height="12" fill="#3572A5"/>
+      <rect x="334.80" y="0" width="54.26" height="12" fill="#e34c26"/>
+      <rect x="389.06" y="0" width="35.95" height="12" fill="#663399"/>
+      <rect x="425.01" y="0" width="5.88" height="12" fill="#f34b7d"/>
+      <rect x="430.89" y="0" width="9.11" height="12" fill="var(--textofraco)"/>
       </g>
     </g>
     <g class="anim" style="animation-delay: 0.35s">
