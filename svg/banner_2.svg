@@ -6,8 +6,8 @@
       .nl-profile-banner {
         --nl-profile-banner-accent: #B14914;
         --nl-profile-banner-avatar-ring: #0d1117;
-        --nl-smart-termite-shift-duration: 160s;
-        --nl-smart-termite-filter-duration: 60s;
+        --nl-smart-termite-shift-duration: 80s;
+        --nl-smart-termite-filter-duration: 12s;
         --nl-profile-banner-avatar-duration: 500ms;
         --nl-profile-banner-avatar-delay: 0.5s;
       }
