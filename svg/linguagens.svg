@@ -39,9 +39,9 @@
       <g class="cresce" style="animation-delay: 0.15s">
       <rect x="0.00" y="0" width="138.75" height="12" fill="#3178c6"/>
       <rect x="138.75" y="0" width="120.07" height="12" fill="#b07219"/>
-      <rect x="258.83" y="0" width="77.48" height="12" fill="#3572A5"/>
-      <rect x="336.30" y="0" width="53.49" height="12" fill="#e34c26"/>
-      <rect x="389.79" y="0" width="35.43" height="12" fill="#663399"/>
+      <rect x="258.81" y="0" width="77.50" height="12" fill="#3572A5"/>
+      <rect x="336.31" y="0" width="53.49" height="12" fill="#e34c26"/>
+      <rect x="389.80" y="0" width="35.43" height="12" fill="#663399"/>
       <rect x="425.23" y="0" width="5.79" height="12" fill="#f34b7d"/>
       <rect x="431.02" y="0" width="8.98" height="12" fill="var(--textofraco)"/>
       </g>
