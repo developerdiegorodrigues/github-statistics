@@ -37,11 +37,11 @@
     <text class="titulo anim" style="animation-delay: 0.10s" x="20" y="34">Linguagens mais utilizadas (incluindo repositórios privados)</text>
     <g transform="translate(20 48)" clip-path="url(#recorte-barra)">
       <g class="cresce" style="animation-delay: 0.15s">
-      <rect x="0.00" y="0" width="137.76" height="12" fill="#3178c6"/>
-      <rect x="137.76" y="0" width="122.62" height="12" fill="#b07219"/>
-      <rect x="260.38" y="0" width="77.23" height="12" fill="#3572A5"/>
-      <rect x="337.60" y="0" width="52.84" height="12" fill="#e34c26"/>
-      <rect x="390.45" y="0" width="34.93" height="12" fill="#663399"/>
+      <rect x="0.00" y="0" width="137.75" height="12" fill="#3178c6"/>
+      <rect x="137.75" y="0" width="122.61" height="12" fill="#b07219"/>
+      <rect x="260.37" y="0" width="77.22" height="12" fill="#3572A5"/>
+      <rect x="337.59" y="0" width="52.84" height="12" fill="#e34c26"/>
+      <rect x="390.43" y="0" width="34.95" height="12" fill="#663399"/>
       <rect x="425.38" y="0" width="5.70" height="12" fill="#f34b7d"/>
       <rect x="431.09" y="0" width="8.91" height="12" fill="var(--textofraco)"/>
       </g>
