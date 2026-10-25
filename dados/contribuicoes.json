@@ -1,24 +1,20 @@
 {
-  "geradoEm": "2026-10-24T18:01:43.550Z",
-  "referencia": "2026-10-24",
+  "geradoEm": "2026-10-25T06:02:33.153Z",
+  "referencia": "2026-10-25",
   "desde": "2020-01-05",
   "total": 2172,
   "atual": {
-    "dias": 1,
-    "inicio": "2026-10-23",
-    "fim": "2026-10-23"
+    "dias": 0,
+    "inicio": null,
+    "fim": null
   },
   "recorde": {
     "dias": 29,
     "inicio": "2026-09-16",
     "fim": "2026-10-14"
   },
-  "diasAnalisados": 2485,
+  "diasAnalisados": 2486,
   "ultimosDias": [
-    {
-      "data": "2026-07-26",
-      "total": 1
-    },
     {
       "data": "2026-07-27",
       "total": 0
@@ -377,6 +373,10 @@
     },
     {
       "data": "2026-10-24",
+      "total": 0
+    },
+    {
+      "data": "2026-10-25",
       "total": 0
     }
   ]
