@@ -1,12 +1,12 @@
 {
-  "geradoEm": "2026-11-06T06:02:12.334Z",
+  "geradoEm": "2026-11-06T18:01:50.212Z",
   "referencia": "2026-11-06",
   "desde": "2020-01-05",
-  "total": 2174,
+  "total": 2177,
   "atual": {
-    "dias": 0,
-    "inicio": null,
-    "fim": null
+    "dias": 1,
+    "inicio": "2026-11-06",
+    "fim": "2026-11-06"
   },
   "recorde": {
     "dias": 29,
@@ -377,7 +377,7 @@
     },
     {
       "data": "2026-11-06",
-      "total": 0
+      "total": 3
     }
   ]
 }
