@@ -1,66 +1,66 @@
 {
-  "geradoEm": "2026-11-12T06:02:11.974Z",
+  "geradoEm": "2026-11-12T18:01:49.099Z",
   "repositoriosAnalisados": 34,
-  "totalBytes": 18131924,
+  "totalBytes": 18456377,
   "todas": [
     {
       "nome": "TypeScript",
-      "bytes": 5491009,
-      "percentual": 30.283653295700997,
+      "bytes": 5581710,
+      "percentual": 30.242717733821756,
       "cor": "#3178c6"
     },
     {
       "nome": "Java",
-      "bytes": 5179603,
-      "percentual": 28.5662073147891,
+      "bytes": 5374442,
+      "percentual": 29.11970209537874,
       "cor": "#b07219"
     },
     {
       "nome": "Python",
-      "bytes": 3439039,
-      "percentual": 18.96676271089599,
+      "bytes": 3466956,
+      "percentual": 18.784596781914455,
       "cor": "#3572A5"
     },
     {
       "nome": "HTML",
-      "bytes": 2069709,
-      "percentual": 11.414723556088147,
+      "bytes": 2076639,
+      "percentual": 11.251606964898906,
       "cor": "#e34c26"
     },
     {
       "nome": "CSS",
-      "bytes": 1369125,
-      "percentual": 7.55090855223086,
+      "bytes": 1372313,
+      "percentual": 7.435440877697719,
       "cor": "#663399"
     },
     {
       "nome": "C++",
       "bytes": 223141,
-      "percentual": 1.2306526323406164,
+      "percentual": 1.2090184330326585,
       "cor": "#f34b7d"
     },
     {
       "nome": "SCSS",
       "bytes": 157722,
-      "percentual": 0.8698580470555689,
+      "percentual": 0.8545664189672761,
       "cor": "#c6538c"
     },
     {
       "nome": "JavaScript",
       "bytes": 140380,
-      "percentual": 0.7742145841776085,
+      "percentual": 0.7606043157874376,
       "cor": "#f1e05a"
     },
     {
       "nome": "Shell",
-      "bytes": 48421,
-      "percentual": 0.26704832868260425,
+      "bytes": 49299,
+      "percentual": 0.2671109286508398,
       "cor": "#89e051"
     },
     {
       "nome": "C",
       "bytes": 13775,
-      "percentual": 0.07597097803851373,
+      "percentual": 0.07463544985020625,
       "cor": "#555555"
     }
   ]
