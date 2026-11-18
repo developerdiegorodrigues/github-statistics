@@ -1,66 +1,66 @@
 {
-  "geradoEm": "2026-11-18T06:02:09.350Z",
+  "geradoEm": "2026-11-18T18:01:30.075Z",
   "repositoriosAnalisados": 34,
-  "totalBytes": 18988092,
+  "totalBytes": 19073312,
   "todas": [
     {
       "nome": "TypeScript",
       "bytes": 5728135,
-      "percentual": 30.166985708727346,
+      "percentual": 30.032198917524127,
       "cor": "#3178c6"
     },
     {
       "nome": "Java",
-      "bytes": 5708404,
-      "percentual": 30.063073214517814,
+      "bytes": 5713713,
+      "percentual": 29.956585411070712,
       "cor": "#b07219"
     },
     {
       "nome": "Python",
-      "bytes": 3466415,
-      "percentual": 18.255731012889555,
+      "bytes": 3546324,
+      "percentual": 18.59312111079607,
       "cor": "#3572A5"
     },
     {
       "nome": "HTML",
       "bytes": 2122771,
-      "percentual": 11.179485542833898,
+      "percentual": 11.129535342367387,
       "cor": "#e34c26"
     },
     {
       "nome": "CSS",
-      "bytes": 1378279,
-      "percentual": 7.25864926291699,
+      "bytes": 1378281,
+      "percentual": 7.226227935662144,
       "cor": "#663399"
     },
     {
       "nome": "C++",
       "bytes": 223141,
-      "percentual": 1.1751628336327842,
+      "percentual": 1.1699121788601792,
       "cor": "#f34b7d"
     },
     {
       "nome": "SCSS",
       "bytes": 157722,
-      "percentual": 0.8306363798953575,
+      "percentual": 0.8269250773017293,
       "cor": "#c6538c"
     },
     {
       "nome": "JavaScript",
       "bytes": 140151,
-      "percentual": 0.7380994362150762,
+      "percentual": 0.734801590830161,
       "cor": "#f1e05a"
     },
     {
       "nome": "Shell",
       "bytes": 49299,
-      "percentual": 0.25963114145433885,
+      "percentual": 0.2584711034979137,
       "cor": "#89e051"
     },
     {
       "nome": "C",
       "bytes": 13775,
-      "percentual": 0.0725454669168445,
+      "percentual": 0.07222133208957102,
       "cor": "#555555"
     }
   ]
